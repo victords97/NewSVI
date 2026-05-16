@@ -521,19 +521,27 @@ function ContentPage({ type }) {
     },
     "nossa-trajetoria": {
       tag: "Nossa Trajetória",
-      title: "De instalações industriais ao autosserviço em Manaus",
+      title: "Uma trajetória construída com atendimento, variedade e confiança",
       image: facade,
-      intro: "A trajetória da SVI nasce em projetos e instalações elétricas industriais e evolui para um portfólio amplo de materiais elétricos, hidráulicos, casa e decoração.",
+      intro: "Desde 1992, a SVI acompanha a evolução de Manaus oferecendo soluções para instalações, manutenção, construção e abastecimento de obras.",
       paragraphs: [
-        "A loja online preserva essa história e adiciona a camada de compra digital: o cliente escolhe produtos por departamento, monta o carrinho e pode finalizar a compra sem depender apenas do WhatsApp.",
-        "O atendimento consultivo continua como apoio para orçamento técnico, garantia e dúvidas de aplicação.",
+        "A empresa iniciou sua atuação com projetos e instalações elétricas industriais, construindo uma base técnica que se tornou parte importante da sua forma de atender. Com o tempo, essa experiência abriu caminho para a comercialização de materiais elétricos e para a ampliação do portfólio.",
+        "Ao longo dos anos, a SVI passou a reunir em um só lugar produtos para áreas elétricas, hidráulicas, pintura, equipamentos, casa e decoração. A variedade de itens, o autosserviço e o suporte de consultores ajudaram a consolidar a marca como uma referência para clientes residenciais, profissionais e empresas.",
+        "A presença física em Manaus segue sendo essencial para retirada, entrega e atendimento próximo. A loja online complementa essa operação, permitindo que o cliente consulte departamentos, veja produtos disponíveis, monte o pedido e escolha a melhor forma de atendimento.",
+        "A trajetória da SVI segue orientada por parceria com marcas reconhecidas, compromisso com o cliente e melhoria contínua na experiência de compra.",
       ],
     },
     "politica-privacidade": {
       tag: "Política de Privacidade",
-      title: "Privacidade e dados de compra",
-      intro: "Esta área organiza as informações de cookies, cadastro, dados de entrega, acompanhamento de pedidos e comunicação com o cliente no fluxo de e-commerce.",
-      paragraphs: ["Na loja online, os dados servem para organizar a jornada de compra direta pelo site e preparar a integração com pagamento, estoque e atendimento."],
+      title: "Segurança e transparência no uso das informações",
+      intro: "A SVI respeita a privacidade dos clientes e utiliza dados pessoais apenas para viabilizar navegação, atendimento, pedidos, entregas e comunicação relacionada aos serviços oferecidos.",
+      paragraphs: [
+        "Durante a navegação e a realização de pedidos, poderemos solicitar informações como nome, telefone, e-mail, CPF ou CNPJ, endereço de entrega, forma de pagamento e dados necessários para emissão de documentos fiscais. Essas informações são utilizadas para identificar o cliente, processar compras, organizar entregas, responder solicitações e acompanhar o pós-venda.",
+        "Dados de navegação, como páginas acessadas, produtos visualizados e preferências de uso, podem ser usados para melhorar a experiência no site, facilitar buscas, personalizar comunicações e aprimorar a segurança da loja online.",
+        "A SVI não comercializa dados pessoais. O compartilhamento de informações ocorre apenas quando necessário para execução do pedido, como operadores de pagamento, transportadoras, sistemas de gestão, atendimento ao cliente, obrigações legais ou solicitação de autoridades competentes.",
+        "O cliente pode solicitar atualização, correção ou exclusão de dados pessoais, observadas as obrigações legais de guarda de informações fiscais, comerciais e de segurança. Também pode entrar em contato para esclarecer dúvidas sobre privacidade e tratamento de dados.",
+        "Ao utilizar o site e realizar pedidos, o cliente declara estar ciente de que suas informações serão tratadas de forma responsável, limitada às finalidades informadas e em conformidade com a legislação aplicável.",
+      ],
     },
   };
   const page = pages[type];
