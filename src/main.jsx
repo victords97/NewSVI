@@ -187,7 +187,7 @@ function Home() {
       brand: "Suvinil",
       title: "Tintas e ferramentas para pintura",
       text: "Escolha cores, complementos e materiais de aplicação com retirada ou entrega.",
-      image: "/assets/suvinil.jpeg",
+      image: "/assets/suvinil.png",
       cta: "Comprar pinturas",
       href: "/produtos?categoria=pinturas",
     },
