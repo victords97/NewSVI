@@ -898,6 +898,75 @@ label {
   font-weight: 800;
 }
 
+.history-page {
+  background:
+    linear-gradient(180deg, rgba(227, 245, 233, 0.75), rgba(255, 255, 255, 0.92)),
+    #f5fbf7;
+}
+
+.history-hero {
+  margin-bottom: 34px;
+}
+
+.history-board {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) 380px;
+  gap: clamp(20px, 4vw, 42px);
+  align-items: start;
+}
+
+.history-image-card {
+  overflow: hidden;
+  border: 1px solid rgba(0, 139, 67, 0.18);
+  border-radius: 8px;
+  background: white;
+  box-shadow: var(--shadow);
+}
+
+.history-image-card img {
+  width: 100%;
+  height: auto;
+}
+
+.timeline-list {
+  position: sticky;
+  top: 126px;
+  display: grid;
+  gap: 14px;
+}
+
+.timeline-item {
+  position: relative;
+  border: 1px solid rgba(0, 139, 67, 0.2);
+  border-radius: 8px;
+  background: white;
+  padding: 18px 18px 18px 24px;
+}
+
+.timeline-item::before {
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  left: 0;
+  width: 5px;
+  border-radius: 999px;
+  background: var(--green);
+  content: "";
+}
+
+.timeline-item strong {
+  display: block;
+  color: var(--green-dark);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.timeline-item p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.58;
+}
+
 @media (max-width: 1180px) {
   .shop-layout {
     grid-template-columns: 230px minmax(0, 1fr);
@@ -925,6 +994,14 @@ label {
   .main-nav {
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 12px;
+  }
+
+  .history-board {
+    grid-template-columns: 1fr;
+  }
+
+  .timeline-list {
+    position: static;
   }
 
   .menu-toggle {

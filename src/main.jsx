@@ -6,6 +6,7 @@ import "../styles.css";
 
 const logo = "/assets/SVI.png";
 const facade = "https://d2r9epyceweg5n.cloudfront.net/stores/002/472/736/rte/FACHADA.png";
+const historyImage = "/assets/historia-svi.png";
 const categoryImages = {
   hidraulicos: "/assets/materiaishidraulicos.png",
   eletricos: "/assets/materiaiseletricos.png",
@@ -564,6 +565,59 @@ function ContentPage({ type }) {
   );
 }
 
+function HistoryPage() {
+  const timeline = [
+    {
+      year: "1992",
+      text: "A SVI inicia suas atividades comerciais com o nome SV Instalações Ltda., atuando com projetos e instalações elétricas industriais.",
+    },
+    {
+      year: "1995",
+      text: "A empresa transfere sua operação para a primeira sede própria, com 480 m², situada na Rua Rio Purus, no Vieiralves.",
+    },
+    {
+      year: "1998",
+      text: "A SVI constrói uma nova sede, com 880 m², e incorpora em suas atividades a venda direta de materiais elétricos.",
+    },
+    {
+      year: "2004",
+      text: "Com crescimento operacional e parcerias com marcas reconhecidas, inaugura nova sede na Rua Santos Dumont, com showroom e autoatendimento.",
+    },
+    {
+      year: "2017",
+      text: "A SVI inaugura unidade na Alameda Cosme Ferreira, integrando centro de distribuição, televendas, departamentos administrativos e loja com estacionamento próprio.",
+    },
+  ];
+
+  return (
+    <main className="content-page history-page">
+      <Link className="page-logo" to="/"><img src={logo} alt="SVI" /></Link>
+      <section className="content-hero history-hero">
+        <div>
+          <span>Nossa Trajetória</span>
+          <h1>Uma história de crescimento em Manaus</h1>
+          <p>Conheça os principais marcos da SVI, desde o início em instalações elétricas industriais até a consolidação como operação de autosserviço, distribuição e atendimento especializado.</p>
+        </div>
+        <img src={facade} alt="Fachada atual da SVI" />
+      </section>
+
+      <section className="history-board" aria-label="Linha do tempo da SVI">
+        <div className="history-image-card">
+          <img src={historyImage} alt="Linha do tempo real da SVI com fotos históricas de 1992, 1995, 1998, 2004 e 2017" />
+        </div>
+        <div className="timeline-list">
+          {timeline.map((item) => (
+            <article className="timeline-item" key={item.year}>
+              <strong>{item.year}</strong>
+              <p>{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}
+
 function StoresPage() {
   return (
     <main className="content-page">
@@ -602,7 +656,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/produtos" element={<Shop {...cartApi} />} />
         <Route path="/quem-somos" element={<ContentPage type="quem-somos" />} />
-        <Route path="/nossa-trajetoria" element={<ContentPage type="nossa-trajetoria" />} />
+        <Route path="/nossa-trajetoria" element={<HistoryPage />} />
         <Route path="/politica-privacidade" element={<ContentPage type="politica-privacidade" />} />
         <Route path="/nossas-lojas" element={<StoresPage />} />
         <Route path="/coleta-seletiva" element={<TextPage tag="Coleta Seletiva" title="Separe, recicle e modifique"><p>Destinar resíduos da maneira correta ainda é um desafio para a maioria das cidades. Incluir a coleta seletiva nos planos de gestão tornou-se uma obrigação para os órgãos públicos, porém todos somos responsáveis pelo lixo que geramos.</p><h2>O que é coleta seletiva?</h2><p>É a coleta e recolhimento de resíduos previamente separados de acordo com o tipo de material. Assim, é possível separar resíduos recicláveis dos não recicláveis para uma destinação ambientalmente adequada.</p><h2>Iniciativa da SVI</h2><p>A SVI, por meio de seu setor de SGI, desenvolve coleta seletiva em suas instalações.</p></TextPage>} />
