@@ -74,8 +74,20 @@ function Header({ cartQuantity }) {
   return (
     <header className="site-header">
       <div className="header-top">
-        <a className="social-link" href={sviLinks.instagram} target="_blank" rel="noreferrer">Instagram</a>
-        <a className="social-link" href={sviLinks.facebook} target="_blank" rel="noreferrer">Facebook</a>
+        <a className="social-link" href={sviLinks.instagram} target="_blank" rel="noreferrer" aria-label="Instagram da SVI">
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="5" />
+            <circle cx="12" cy="12" r="4" />
+            <path d="M17.5 6.5h.01" />
+          </svg>
+          Instagram
+        </a>
+        <a className="social-link" href={sviLinks.facebook} target="_blank" rel="noreferrer" aria-label="Facebook da SVI">
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M14 8h2V4h-2c-3 0-5 2-5 5v3H7v4h2v5h4v-5h3l1-4h-4V9c0-.6.4-1 1-1Z" />
+          </svg>
+          Facebook
+        </a>
         <span className="phone">Atendimento: 92 2123-4411</span>
         <a className="account-link" href={sviLinks.jobs} target="_blank" rel="noreferrer">Trabalhe Conosco</a>
         <a className="account-link" href={sviLinks.collaborator} target="_blank" rel="noreferrer">Sou Colaborador</a>

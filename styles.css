@@ -92,7 +92,14 @@ img {
   gap: 6px;
 }
 
-.cart-link svg {
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cart-link svg,
+.social-link svg {
   width: 19px;
   height: 19px;
   fill: none;
@@ -101,6 +108,11 @@ img {
   stroke-linejoin: round;
   stroke-width: 2;
   flex: 0 0 auto;
+}
+
+.social-link svg {
+  width: 18px;
+  height: 18px;
 }
 
 .main-nav {
