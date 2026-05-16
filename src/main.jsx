@@ -343,7 +343,30 @@ function Shop({ cart, subtotal, addToCart, changeQuantity }) {
       setConfirmation("Preencha nome, celular e endereço ou loja de retirada.");
       return;
     }
-    setConfirmation(`Pedido SVI-${Math.floor(100000 + Math.random() * 900000)} criado. O acompanhamento segue por WhatsApp ou SMS.`);
+    const orderId = `SVI-${Math.floor(100000 + Math.random() * 900000)}`;
+    const payment = form.get("payment");
+    const orderItems = cart
+      .map((item) => `- ${item.quantity}x ${item.product.name} (${item.product.sku}) - ${currency.format(item.product.price * item.quantity)}`)
+      .join("\n");
+    const message = [
+      `Olá, SVI! Quero finalizar o pedido ${orderId}.`,
+      "",
+      `Nome: ${form.get("name")}`,
+      `Celular: ${form.get("phone")}`,
+      `Entrega/retirada: ${deliveryMode === "delivery" ? "Entrega em Manaus" : "Retirada na loja"}`,
+      `Endereço/loja: ${form.get("address")}`,
+      `Pagamento: ${payment}`,
+      "",
+      "Itens:",
+      orderItems,
+      "",
+      `Subtotal: ${currency.format(subtotal)}`,
+      `Entrega: ${shipping === 0 ? "Grátis" : currency.format(shipping)}`,
+      `Total: ${currency.format(subtotal + shipping)}`,
+    ].join("\n");
+
+    setConfirmation(`Pedido ${orderId} criado. Abrindo WhatsApp para envio da lista de compras.`);
+    window.open(`https://wa.me/5592981364269?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
   };
   const notifyAdded = (productName) => {
     setCartFeedback(`${productName} foi adicionado ao carrinho.`);
