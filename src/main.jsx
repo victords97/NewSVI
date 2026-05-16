@@ -1,0 +1,609 @@
+import React, { useEffect, useMemo, useState } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter, Link, NavLink, Route, Routes, useSearchParams } from "react-router-dom";
+import { categories, currency, products, sviLinks } from "./data";
+import "../styles.css";
+
+const logo = "/assets/SVI.png";
+const facade = "https://d2r9epyceweg5n.cloudfront.net/stores/002/472/736/rte/FACHADA.png";
+const categoryImages = {
+  hidraulicos: "/assets/materiaishidraulicos.png",
+  eletricos: "/assets/materiaiseletricos.png",
+  pinturas: "/assets/materiaispintura.png",
+  equipamentos: "/assets/materiaisequipamentos.png",
+};
+
+function useCart() {
+  const [cart, setCart] = useState(() => {
+    try {
+      const raw = localStorage.getItem("svi-cart");
+      if (!raw) return [];
+      return JSON.parse(raw)
+        .map((item) => ({
+          product: products.find((product) => product.id === item.id),
+          quantity: item.quantity,
+        }))
+        .filter((item) => item.product);
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem("svi-cart", JSON.stringify(cart.map((item) => ({ id: item.product.id, quantity: item.quantity }))));
+  }, [cart]);
+
+  const addToCart = (productId) => {
+    const product = products.find((item) => item.id === productId);
+    if (!product || product.stock === 0) return;
+
+    setCart((current) => {
+      const existing = current.find((item) => item.product.id === productId);
+      if (existing) {
+        return current.map((item) =>
+          item.product.id === productId ? { ...item, quantity: Math.min(item.quantity + 1, item.product.stock) } : item
+        );
+      }
+      return [...current, { product, quantity: 1 }];
+    });
+  };
+
+  const changeQuantity = (productId, direction) => {
+    setCart((current) =>
+      current
+        .map((item) =>
+          item.product.id === productId
+            ? { ...item, quantity: Math.min(item.product.stock, item.quantity + direction) }
+            : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
+  };
+
+  const quantity = cart.reduce((total, item) => total + item.quantity, 0);
+  const subtotal = cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
+
+  return { cart, quantity, subtotal, addToCart, changeQuantity };
+}
+
+function Header({ cartQuantity }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
+
+  return (
+    <header className="site-header">
+      <div className="header-top">
+        <a className="social-link" href={sviLinks.instagram} target="_blank" rel="noreferrer">Instagram</a>
+        <a className="social-link" href={sviLinks.facebook} target="_blank" rel="noreferrer">Facebook</a>
+        <span className="phone">Atendimento: 92 2123-4411</span>
+        <a className="account-link" href={sviLinks.jobs} target="_blank" rel="noreferrer">Trabalhe Conosco</a>
+        <a className="account-link" href={sviLinks.collaborator} target="_blank" rel="noreferrer">Sou Colaborador</a>
+        <Link className="cart-link" to="/produtos#carrinho">Meu carrinho <span>{cartQuantity}</span></Link>
+      </div>
+
+      <div className="main-nav">
+        <Link className="brand" to="/" aria-label="SVI">
+          <img className="brand-logo" src={logo} alt="SVI" />
+          <span>
+            <strong>SVI</strong>
+            <small>Instalações, materiais e serviços</small>
+          </span>
+        </Link>
+
+        <button className="menu-toggle" type="button" onClick={() => setMenuOpen((current) => !current)} aria-expanded={menuOpen} aria-controls="main-menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav className={`nav-links ${menuOpen ? "open" : ""}`} id="main-menu" aria-label="Menu principal">
+          <NavLink onClick={closeMenu} to="/">Início</NavLink>
+          <NavLink onClick={closeMenu} to="/quem-somos">Quem Somos</NavLink>
+          <NavLink onClick={closeMenu} to="/nossa-trajetoria">Nossa Trajetória</NavLink>
+          <NavLink onClick={closeMenu} to="/politica-privacidade">Política de Privacidade</NavLink>
+          <NavLink onClick={closeMenu} to="/nossas-lojas">Nossas Lojas</NavLink>
+          <NavLink onClick={closeMenu} to="/coleta-seletiva">Coleta Seletiva</NavLink>
+          <NavLink onClick={closeMenu} to="/produtos">Loja Online</NavLink>
+          <NavLink onClick={closeMenu} to="/troca-devolucao">Troca e Devolução</NavLink>
+          <NavLink onClick={closeMenu} to="/assistencia-tecnica">Assistência técnica</NavLink>
+        </nav>
+      </div>
+    </header>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="site-footer">
+      <strong>SVI</strong>
+      <span>Copyright S V INSTALACOES LTDA - 84089358000122 - 2026. Todos os direitos reservados.</span>
+    </footer>
+  );
+}
+
+function Home() {
+  const slides = [
+    {
+      brand: "Tigre",
+      title: "Hidráulicos com compra direta no site",
+      text: "Tubos, conexões, registros e acessórios para obra, manutenção e reposição.",
+      image: "/assets/tigre.png",
+      cta: "Comprar hidráulicos",
+      href: "/produtos?categoria=hidraulicos",
+    },
+    {
+      brand: "Suvinil",
+      title: "Tintas e ferramentas para pintura",
+      text: "Escolha cores, complementos e materiais de aplicação com retirada ou entrega.",
+      image: "/assets/suvinil.jpeg",
+      cta: "Comprar pinturas",
+      href: "/produtos?categoria=pinturas",
+    },
+    {
+      brand: "Jotun",
+      title: "Acabamento técnico e industrial",
+      text: "Produtos para manutenção, proteção e acabamento com apoio do time consultivo.",
+      image: "/assets/jotun.png",
+      cta: "Ver produtos",
+      href: "/produtos?categoria=pinturas",
+    },
+  ];
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => setActive((current) => (current + 1) % slides.length), 5200);
+    return () => clearInterval(timer);
+  }, [slides.length]);
+
+  return (
+    <main>
+      <section className="slideshow" aria-label="Destaques de produtos">
+        {slides.map((slide, index) => (
+          <div className={`slide ${active === index ? "active" : ""}`} key={slide.brand}>
+            <img src={slide.image} alt={slide.title} />
+            <div className="slide-copy">
+              <span>{slide.brand}</span>
+              <h1>{slide.title}</h1>
+              <p>{slide.text}</p>
+              <Link className="primary-action" to={slide.href}>{slide.cta}</Link>
+            </div>
+          </div>
+        ))}
+        <div className="slide-dots" aria-label="Controle do slideshow">
+          {slides.map((slide, index) => (
+            <button
+              className={active === index ? "active" : ""}
+              key={slide.brand}
+              type="button"
+              onClick={() => setActive(index)}
+              aria-label={`Slide ${slide.brand}`}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section className="benefits-grid" aria-label="Benefícios de compra">
+        <article>
+          <strong>Frete Grátis*</strong>
+          <span>Entregamos em toda Manaus</span>
+        </article>
+        <article>
+          <strong>Parcelamos até 12x</strong>
+          <span>Flexibilidade no pagamento</span>
+        </article>
+      </section>
+
+      <section className="service-modes" aria-label="Formas de atendimento">
+        <Link className="mode-card" to="/produtos">
+          <img src={facade} alt="Fachada da loja SVI" />
+          <div>
+            <span>Autosserviço</span>
+            <h2>Uma infinidade de produtos a sua escolha em modo TAKE AND PAY</h2>
+          </div>
+        </Link>
+        <a className="mode-card" href={sviLinks.whatsapp} target="_blank" rel="noreferrer">
+          <img src={facade} alt="Atendimento da SVI em Manaus" />
+          <div>
+            <span>Televendas</span>
+            <h2>Fale com nosso time de consultores</h2>
+          </div>
+        </a>
+      </section>
+
+      <section className="department-section">
+        <div className="section-head">
+          <span>Departamentos</span>
+          <h2>Escolha uma categoria para abrir os produtos disponíveis</h2>
+        </div>
+        <div className="department-grid">
+          {categories.filter((category) => category.id !== "all").map((category) => (
+            <Link className="department-card" to={`/produtos?categoria=${category.id}`} key={category.id}>
+              <img src={categoryImages[category.id]} alt={category.name} />
+              <strong>{category.name}</strong>
+              <span>{departmentDescription(category.id)}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function departmentDescription(categoryId) {
+  return {
+    hidraulicos: "Tubos, conexões, registros e reparos.",
+    eletricos: "Cabos, disjuntores, tomadas e iluminação.",
+    pinturas: "Tintas, rolos, pincéis e complementos.",
+    equipamentos: "Ferramentas, EPIs e itens de apoio.",
+  }[categoryId];
+}
+
+function Shop({ cart, subtotal, addToCart, changeQuantity }) {
+  const [params, setParams] = useSearchParams();
+  const [query, setQuery] = useState("");
+  const [stockOnly, setStockOnly] = useState(true);
+  const [sort, setSort] = useState("featured");
+  const [brandFilter, setBrandFilter] = useState("all");
+  const [priceFilter, setPriceFilter] = useState("all");
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [deliveryMode, setDeliveryMode] = useState("delivery");
+  const [confirmation, setConfirmation] = useState("");
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const category = params.get("categoria") || "all";
+  const shipping = !cart.length || deliveryMode === "pickup" || subtotal >= 300 ? 0 : 18;
+  const visibleBrands = useMemo(() => {
+    const categoryProducts = products.filter((product) => category === "all" || product.category === category);
+    return [...new Set(categoryProducts.map((product) => product.brand))].sort();
+  }, [category]);
+
+  const filtered = useMemo(() => {
+    const term = query.trim().toLowerCase();
+    const list = products.filter((product) => {
+      const categoryOk = category === "all" || product.category === category;
+      const stockOk = !stockOnly || product.stock > 0;
+      const brandOk = brandFilter === "all" || product.brand === brandFilter;
+      const priceOk =
+        priceFilter === "all" ||
+        (priceFilter === "up50" && product.price <= 50) ||
+        (priceFilter === "50to150" && product.price > 50 && product.price <= 150) ||
+        (priceFilter === "150to300" && product.price > 150 && product.price <= 300) ||
+        (priceFilter === "over300" && product.price > 300);
+      const searchOk = !term || [product.name, product.brand, product.sku, getCategoryName(product.category)].join(" ").toLowerCase().includes(term);
+      return categoryOk && stockOk && brandOk && priceOk && searchOk;
+    });
+
+    return [...list].sort((a, b) => {
+      if (sort === "priceAsc") return a.price - b.price;
+      if (sort === "priceDesc") return b.price - a.price;
+      return b.stock - a.stock;
+    });
+  }, [brandFilter, category, priceFilter, query, stockOnly, sort]);
+
+  const finishOrder = (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    if (!cart.length) {
+      setConfirmation("Adicione pelo menos um produto para finalizar o pedido.");
+      return;
+    }
+    if (!form.get("name") || !form.get("phone") || !form.get("address")) {
+      setConfirmation("Preencha nome, celular e endereço ou loja de retirada.");
+      return;
+    }
+    setConfirmation(`Pedido SVI-${Math.floor(100000 + Math.random() * 900000)} criado. O acompanhamento segue por WhatsApp ou SMS.`);
+  };
+
+  return (
+    <main className="shop-page">
+      <section className="shop-hero">
+        <div>
+          <span>Loja online SVI</span>
+          <h1>Produtos disponíveis para compra direta</h1>
+          <p>Escolha a categoria, adicione ao carrinho e finalize o pedido em uma experiência moderna, sem perder o atendimento consultivo.</p>
+        </div>
+        <form className="shop-search" role="search">
+          <input value={query} onChange={(event) => setQuery(event.target.value)} type="search" placeholder="Buscar produto, marca ou código" />
+        </form>
+      </section>
+
+      <section className="shop-layout">
+        <aside className="shop-sidebar">
+          <span>Departamentos</span>
+          <div className="category-list">
+            {categories.map((item) => (
+              <button
+                className={`category-button ${category === item.id ? "active" : ""}`}
+                key={item.id}
+                type="button"
+                onClick={() => {
+                  setBrandFilter("all");
+                  setParams(item.id === "all" ? {} : { categoria: item.id });
+                }}
+              >
+                <span>{item.name}</span>
+                <small>{item.id === "all" ? products.length : products.filter((product) => product.category === item.id).length}</small>
+              </button>
+            ))}
+          </div>
+          <label className="stock-toggle">
+            <input checked={stockOnly} onChange={(event) => setStockOnly(event.target.checked)} type="checkbox" />
+            Mostrar apenas em estoque
+          </label>
+          <label>
+            Marca
+            <select value={brandFilter} onChange={(event) => setBrandFilter(event.target.value)}>
+              <option value="all">Todas as marcas</option>
+              {visibleBrands.map((brand) => <option value={brand} key={brand}>{brand}</option>)}
+            </select>
+          </label>
+          <label>
+            Faixa de preço
+            <select value={priceFilter} onChange={(event) => setPriceFilter(event.target.value)}>
+              <option value="all">Todos os preços</option>
+              <option value="up50">Até R$ 50</option>
+              <option value="50to150">R$ 50 a R$ 150</option>
+              <option value="150to300">R$ 150 a R$ 300</option>
+              <option value="over300">Acima de R$ 300</option>
+            </select>
+          </label>
+          <button
+            className="filter-clear"
+            type="button"
+            onClick={() => {
+              setQuery("");
+              setStockOnly(true);
+              setBrandFilter("all");
+              setPriceFilter("all");
+              setSort("featured");
+            }}
+          >
+            Limpar filtros
+          </button>
+        </aside>
+
+        <section className="shop-products">
+          <div className="products-head">
+            <div>
+              <span>{filtered.length} produto{filtered.length === 1 ? "" : "s"} encontrado{filtered.length === 1 ? "" : "s"}</span>
+              <h2>{category === "all" ? "Todos os produtos" : getCategoryName(category)}</h2>
+            </div>
+            <select value={sort} onChange={(event) => setSort(event.target.value)} aria-label="Ordenar produtos">
+              <option value="featured">Mais relevantes</option>
+              <option value="priceAsc">Menor preço</option>
+              <option value="priceDesc">Maior preço</option>
+            </select>
+          </div>
+          <div className="product-grid">
+            {filtered.length ? filtered.map((product) => (
+              <article className="product-card" key={product.id}>
+                <button className="product-image" type="button" onClick={() => setSelectedProduct(product)} aria-label={`Ver ${product.name}`}>
+                  <img src={product.image} alt={product.name} />
+                </button>
+                <div className="product-body">
+                  <div className="product-meta">
+                    <span>{product.brand}</span>
+                    <span>{product.stock > 0 ? `${product.stock} em estoque` : "Indisponível"}</span>
+                  </div>
+                  <h3>{product.name}</h3>
+                  <span className="price">{currency.format(product.price)}</span>
+                  <div className="card-actions">
+                    <button className="add-button" onClick={() => addToCart(product.id)} type="button" disabled={product.stock === 0}>Comprar</button>
+                    <button className="small-button" onClick={() => setSelectedProduct(product)} type="button">Detalhes</button>
+                  </div>
+                </div>
+              </article>
+            )) : <div className="summary-empty">Nenhum produto encontrado nessa seleção.</div>}
+          </div>
+        </section>
+
+        <CartCard cart={cart} subtotal={subtotal} shipping={shipping} changeQuantity={changeQuantity} openCheckout={() => setCheckoutOpen(true)} />
+      </section>
+
+      {selectedProduct && <ProductDialog product={selectedProduct} onClose={() => setSelectedProduct(null)} addToCart={addToCart} />}
+      {checkoutOpen && (
+        <CheckoutDialog
+          confirmation={confirmation}
+          deliveryMode={deliveryMode}
+          finishOrder={finishOrder}
+          onClose={() => setCheckoutOpen(false)}
+          setDeliveryMode={setDeliveryMode}
+        />
+      )}
+    </main>
+  );
+}
+
+function CartCard({ cart, subtotal, shipping, changeQuantity, openCheckout }) {
+  return (
+    <aside className="checkout-card" id="carrinho">
+      <div className="checkout-card-head">
+        <span>Carrinho</span>
+        <strong>{cart.reduce((total, item) => total + item.quantity, 0)}</strong>
+      </div>
+      <div className="cart-items">
+        {cart.length ? cart.map((item) => (
+          <article className="cart-item" key={item.product.id}>
+            <div>
+              <strong>{item.product.name}</strong>
+              <small>{currency.format(item.product.price)} cada</small>
+            </div>
+            <div className="quantity-controls">
+              <button onClick={() => changeQuantity(item.product.id, -1)} type="button">-</button>
+              <strong>{item.quantity}</strong>
+              <button onClick={() => changeQuantity(item.product.id, 1)} type="button">+</button>
+            </div>
+          </article>
+        )) : <div className="cart-empty">Seu carrinho está vazio.</div>}
+      </div>
+      <div className="summary-line"><span>Subtotal</span><strong>{currency.format(subtotal)}</strong></div>
+      <div className="summary-line"><span>Entrega</span><strong>{shipping === 0 ? "Grátis" : currency.format(shipping)}</strong></div>
+      <div className="summary-total"><span>Total</span><strong>{currency.format(subtotal + shipping)}</strong></div>
+      <button className="primary-action full" type="button" onClick={openCheckout}>Finalizar pedido</button>
+    </aside>
+  );
+}
+
+function CheckoutDialog({ confirmation, deliveryMode, finishOrder, onClose, setDeliveryMode }) {
+  return (
+    <div className="modal-layer" role="presentation" onMouseDown={onClose}>
+      <section className="checkout-dialog react-dialog" role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()}>
+        <button className="dialog-close" type="button" onClick={onClose} aria-label="Fechar checkout">x</button>
+        <div className="section-head">
+          <span>Checkout</span>
+          <h2>Dados para finalizar o pedido</h2>
+        </div>
+        <form className="checkout-form-panel" onSubmit={finishOrder}>
+          <label>Nome completo<input name="name" type="text" placeholder="Ex.: Maria Andrade" /></label>
+          <label>Celular<input name="phone" type="tel" placeholder="(92) 99999-9999" /></label>
+          <label>
+            Entrega ou retirada
+            <select value={deliveryMode} onChange={(event) => setDeliveryMode(event.target.value)}>
+              <option value="delivery">Entrega em Manaus</option>
+              <option value="pickup">Retirada na loja</option>
+            </select>
+          </label>
+          <label>
+            Pagamento
+            <select name="payment">
+              <option value="Pix">Pix</option>
+              <option value="Cartão de crédito">Cartão de crédito</option>
+              <option value="Orçamento PJ">Orçamento PJ</option>
+            </select>
+          </label>
+          <label className="wide">Endereço ou loja de retirada<input name="address" type="text" placeholder="Rua, número, bairro ou unidade SVI" /></label>
+          <button className="primary-action full" type="submit">Criar pedido</button>
+          <p className="confirmation" role="status">{confirmation}</p>
+        </form>
+      </section>
+    </div>
+  );
+}
+
+function ProductDialog({ product, onClose, addToCart }) {
+  return (
+    <div className="modal-layer" role="presentation" onMouseDown={onClose}>
+      <section className="product-dialog react-dialog" role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()}>
+        <button className="dialog-close" type="button" onClick={onClose} aria-label="Fechar produto">x</button>
+        <div className="dialog-layout">
+          <img src={product.image} alt={product.name} />
+          <div className="dialog-info">
+            <span>{getCategoryName(product.category)} | {product.sku}</span>
+            <h2>{product.name}</h2>
+            <p>{product.brand} disponível para compra online, retirada ou entrega em Manaus.</p>
+            <strong className="price">{currency.format(product.price)}</strong>
+            <ul>{product.specs.map((spec) => <li key={spec}>{spec}</li>)}</ul>
+            <button className="primary-action full" onClick={() => { addToCart(product.id); onClose(); }} type="button" disabled={product.stock === 0}>
+              Adicionar ao carrinho
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function getCategoryName(id) {
+  return categories.find((category) => category.id === id)?.name || "Produtos";
+}
+
+function ContentPage({ type }) {
+  const pages = {
+    "quem-somos": {
+      tag: "Quem Somos",
+      title: "A SV Instalações",
+      image: facade,
+      intro: "A SV Instalações se diversificou bastante desde sua fundação, em 1992. Fundamentalmente foi criada para realização de projetos e instalações elétricas industriais.",
+      paragraphs: [
+        "Com o crescimento de suas atividades, a empresa foi criando condições de venda de materiais elétricos em seu site, estabelecendo parcerias com as melhores marcas do mercado no ramo elétrico, hidráulico, casa e decoração.",
+        "Atualmente é referência no mix de produtos em seu portfólio. Seu ponto forte é a variedade de opções para o cliente escolher em seu showroom.",
+        "Hoje possui mais de 75.000 itens cadastrados e 250 colaboradores dedicados, focados e comprometidos em fornecer sempre o melhor serviço na venda e distribuição de produtos.",
+      ],
+    },
+    "nossa-trajetoria": {
+      tag: "Nossa Trajetória",
+      title: "De instalações industriais ao autosserviço em Manaus",
+      image: facade,
+      intro: "A trajetória da SVI nasce em projetos e instalações elétricas industriais e evolui para um portfólio amplo de materiais elétricos, hidráulicos, casa e decoração.",
+      paragraphs: [
+        "O novo MVP preserva essa história e adiciona a camada de compra online: o cliente escolhe produtos por departamento, monta o carrinho e pode finalizar a compra sem depender apenas do WhatsApp.",
+        "O atendimento consultivo continua como apoio para orçamento técnico, garantia e dúvidas de aplicação.",
+      ],
+    },
+    "politica-privacidade": {
+      tag: "Política de Privacidade",
+      title: "Privacidade e dados de compra",
+      intro: "Esta área organiza as informações de cookies, cadastro, dados de entrega, acompanhamento de pedidos e comunicação com o cliente no fluxo de e-commerce.",
+      paragraphs: ["No MVP, os dados servem para simular a jornada de compra direta pelo site e preparar a futura integração com pagamento, estoque e atendimento."],
+    },
+  };
+  const page = pages[type];
+
+  return (
+    <main className="content-page">
+      <Link className="page-logo" to="/"><img src={logo} alt="SVI" /></Link>
+      {page.image ? (
+        <section className="content-hero">
+          <div><span>{page.tag}</span><h1>{page.title}</h1><p>{page.intro}</p></div>
+          <img src={page.image} alt={page.title} />
+        </section>
+      ) : null}
+      <section className="content-card content-long">
+        {!page.image ? <><span>{page.tag}</span><h1>{page.title}</h1><p>{page.intro}</p></> : null}
+        {page.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        <Link className="primary-action" to="/produtos">Ir para loja online</Link>
+      </section>
+    </main>
+  );
+}
+
+function StoresPage() {
+  return (
+    <main className="content-page">
+      <Link className="page-logo" to="/"><img src={logo} alt="SVI" /></Link>
+      <section className="content-hero">
+        <div><span>Nossas Lojas</span><h1>Atendimento em Manaus</h1><p>Consulte endereços, horários e opções de retirada para os pedidos feitos no e-commerce.</p></div>
+        <img src={facade} alt="Fachada da matriz SVI" />
+      </section>
+      <section className="info-grid">
+        <article className="content-card"><h2>Matriz</h2><p>Av. Cosme Ferreira, 2116 - Coroado - FONE: (92) 2123-4444</p><p>Segunda a sexta: 8h às 17h. Sábado: 8h às 14h.</p></article>
+        <article className="content-card"><h2>Filial</h2><p>Av. Joaquim Gonzaga Pinheiro, 495 - Nossa Senhora das Graças - FONE: (92) 2101-3780</p><p>Segunda a sexta: 8h às 17h. Sábado: 8h às 14h.</p></article>
+      </section>
+    </main>
+  );
+}
+
+function TextPage({ title, tag, children }) {
+  return (
+    <main className="content-page">
+      <Link className="page-logo" to="/"><img src={logo} alt="SVI" /></Link>
+      <section className="content-card content-long">
+        <span>{tag}</span>
+        <h1>{title}</h1>
+        {children}
+      </section>
+    </main>
+  );
+}
+
+function App() {
+  const cartApi = useCart();
+  return (
+    <BrowserRouter>
+      <Header cartQuantity={cartApi.quantity} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/produtos" element={<Shop {...cartApi} />} />
+        <Route path="/quem-somos" element={<ContentPage type="quem-somos" />} />
+        <Route path="/nossa-trajetoria" element={<ContentPage type="nossa-trajetoria" />} />
+        <Route path="/politica-privacidade" element={<ContentPage type="politica-privacidade" />} />
+        <Route path="/nossas-lojas" element={<StoresPage />} />
+        <Route path="/coleta-seletiva" element={<TextPage tag="Coleta Seletiva" title="Separe, recicle e modifique"><p>Destinar resíduos da maneira correta ainda é um desafio para a maioria das cidades. Incluir a coleta seletiva nos planos de gestão tornou-se uma obrigação para os órgãos públicos, porém todos somos responsáveis pelo lixo que geramos.</p><h2>O que é coleta seletiva?</h2><p>É a coleta e recolhimento de resíduos previamente separados de acordo com o tipo de material. Assim, é possível separar resíduos recicláveis dos não recicláveis para uma destinação ambientalmente adequada.</p><h2>Iniciativa da SVI</h2><p>A SVI, por meio de seu setor de SGI, desenvolve coleta seletiva em suas instalações.</p></TextPage>} />
+        <Route path="/troca-devolucao" element={<TextPage tag="Troca e Devolução" title="Regras para compras e pedidos"><p><strong>Não fazemos troca entre lojas:</strong> a troca ocorre somente na loja onde foi emitida a venda.</p><p>Para qualquer troca de produtos é necessário apresentar nota ou cupom fiscal.</p><p>Compras feitas por telefone ou internet podem acionar troca e devolução em até 7 dias a partir da entrega.</p></TextPage>} />
+        <Route path="/assistencia-tecnica" element={<TextPage tag="Assistência Técnica" title="Fabricantes atendidos"><p>A SVI direciona o cliente para os canais oficiais de assistência de marcas como Makita, Lorenzetti, Fame, Intelbras, Tramontina, Tigre, Starrett, Bosch e Legrand.</p><div className="brand-grid"><a href="https://www.makita.com.br">Makita</a><a href="https://www.lorenzetti.com.br">Lorenzetti</a><a href="https://www.tigre.com.br">Tigre</a><a href="https://www.boschacessorios.com.br">Bosch</a></div></TextPage>} />
+      </Routes>
+      <Footer />
+    </BrowserRouter>
+  );
+}
+
+createRoot(document.getElementById("root")).render(<App />);
