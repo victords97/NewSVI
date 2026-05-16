@@ -79,7 +79,13 @@ function Header({ cartQuantity }) {
         <span className="phone">Atendimento: 92 2123-4411</span>
         <a className="account-link" href={sviLinks.jobs} target="_blank" rel="noreferrer">Trabalhe Conosco</a>
         <a className="account-link" href={sviLinks.collaborator} target="_blank" rel="noreferrer">Sou Colaborador</a>
-        <Link className="cart-link" to="/produtos#carrinho">Meu carrinho <span>{cartQuantity}</span></Link>
+        <Link className="cart-link" to="/produtos#carrinho" aria-label={`Meu carrinho com ${cartQuantity} itens`}>
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M6 6h15l-1.5 8.5H8L6 3H3" />
+            <path d="M9 20a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 9 20Zm9 0a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 18 20Z" />
+          </svg>
+          Meu carrinho <span>{cartQuantity}</span>
+        </Link>
       </div>
 
       <div className="main-nav">
