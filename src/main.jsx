@@ -525,7 +525,7 @@ function ContentPage({ type }) {
       image: facade,
       intro: "A trajetória da SVI nasce em projetos e instalações elétricas industriais e evolui para um portfólio amplo de materiais elétricos, hidráulicos, casa e decoração.",
       paragraphs: [
-        "O novo MVP preserva essa história e adiciona a camada de compra online: o cliente escolhe produtos por departamento, monta o carrinho e pode finalizar a compra sem depender apenas do WhatsApp.",
+        "A loja online preserva essa história e adiciona a camada de compra digital: o cliente escolhe produtos por departamento, monta o carrinho e pode finalizar a compra sem depender apenas do WhatsApp.",
         "O atendimento consultivo continua como apoio para orçamento técnico, garantia e dúvidas de aplicação.",
       ],
     },
@@ -533,7 +533,7 @@ function ContentPage({ type }) {
       tag: "Política de Privacidade",
       title: "Privacidade e dados de compra",
       intro: "Esta área organiza as informações de cookies, cadastro, dados de entrega, acompanhamento de pedidos e comunicação com o cliente no fluxo de e-commerce.",
-      paragraphs: ["No MVP, os dados servem para simular a jornada de compra direta pelo site e preparar a futura integração com pagamento, estoque e atendimento."],
+      paragraphs: ["Na loja online, os dados servem para organizar a jornada de compra direta pelo site e preparar a integração com pagamento, estoque e atendimento."],
     },
   };
   const page = pages[type];
