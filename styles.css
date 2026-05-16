@@ -823,6 +823,98 @@ label {
   font-size: 1.1rem;
 }
 
+.supplier-section {
+  overflow: hidden;
+  padding: clamp(30px, 5vw, 58px) 0;
+  border-top: 1px solid rgba(0, 139, 67, 0.18);
+  background: linear-gradient(180deg, #ffffff, var(--green-soft));
+}
+
+.supplier-head {
+  max-width: 1180px;
+  margin: 0 auto 22px;
+  padding: 0 clamp(16px, 4vw, 56px);
+  text-align: center;
+}
+
+.supplier-head span {
+  color: var(--green-dark);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.supplier-head h2 {
+  margin: 8px 0 0;
+  font-size: clamp(1.55rem, 3vw, 2.35rem);
+  line-height: 1.08;
+}
+
+.supplier-carousel {
+  position: relative;
+  overflow: hidden;
+}
+
+.supplier-carousel::before,
+.supplier-carousel::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  width: clamp(42px, 10vw, 140px);
+  content: "";
+  pointer-events: none;
+}
+
+.supplier-carousel::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--green-soft), rgba(227, 245, 233, 0));
+}
+
+.supplier-carousel::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--green-soft), rgba(227, 245, 233, 0));
+}
+
+.supplier-track {
+  display: flex;
+  width: max-content;
+  gap: 16px;
+  animation: supplier-scroll 34s linear infinite;
+}
+
+.supplier-carousel:hover .supplier-track {
+  animation-play-state: paused;
+}
+
+.supplier-card {
+  display: grid;
+  width: clamp(170px, 20vw, 260px);
+  height: clamp(92px, 12vw, 132px);
+  place-items: center;
+  border: 1px solid rgba(0, 139, 67, 0.16);
+  border-radius: 8px;
+  background: white;
+  padding: 14px;
+  box-shadow: 0 10px 30px rgba(0, 74, 47, 0.08);
+}
+
+.supplier-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+@keyframes supplier-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-50% - 8px));
+  }
+}
+
 .simple-page {
   display: grid;
   min-height: 100vh;

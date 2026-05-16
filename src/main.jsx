@@ -136,6 +136,43 @@ function Footer() {
   );
 }
 
+function SupplierCarousel() {
+  const suppliers = [
+    "Bosch",
+    "Starrett",
+    "Suvinil",
+    "Tigre",
+    "Steck",
+    "3M",
+    "Deca",
+    "Schneider",
+    "Lorenzetti",
+    "Fornecedor parceiro",
+  ].map((name, index) => ({
+    name,
+    image: `/assets/fornecedores/fornecedor-${index + 1}.webp`,
+  }));
+  const loop = [...suppliers, ...suppliers];
+
+  return (
+    <section className="supplier-section" aria-label="Principais fornecedores">
+      <div className="supplier-head">
+        <span>Principais fornecedores</span>
+        <h2>Marcas parceiras presentes na SVI</h2>
+      </div>
+      <div className="supplier-carousel">
+        <div className="supplier-track">
+          {loop.map((supplier, index) => (
+            <article className="supplier-card" key={`${supplier.name}-${index}`}>
+              <img src={supplier.image} alt={supplier.name} />
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Home() {
   const slides = [
     {
@@ -677,6 +714,7 @@ function App() {
         <Route path="/troca-devolucao" element={<TextPage tag="Troca e Devolução" title="Regras para compras e pedidos"><p><strong>Não fazemos troca entre lojas:</strong> a troca ocorre somente na loja onde foi emitida a venda.</p><p>Para qualquer troca de produtos é necessário apresentar nota ou cupom fiscal.</p><p>Compras feitas por telefone ou internet podem acionar troca e devolução em até 7 dias a partir da entrega.</p></TextPage>} />
         <Route path="/assistencia-tecnica" element={<TextPage tag="Assistência Técnica" title="Fabricantes atendidos"><p>A SVI direciona o cliente para os canais oficiais de assistência de marcas como Makita, Lorenzetti, Fame, Intelbras, Tramontina, Tigre, Starrett, Bosch e Legrand.</p><div className="brand-grid"><a href="https://www.makita.com.br">Makita</a><a href="https://www.lorenzetti.com.br">Lorenzetti</a><a href="https://www.tigre.com.br">Tigre</a><a href="https://www.boschacessorios.com.br">Bosch</a></div></TextPage>} />
       </Routes>
+      <SupplierCarousel />
       <Footer />
     </BrowserRouter>
   );
