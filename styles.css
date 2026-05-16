@@ -125,12 +125,11 @@ img {
 
 .brand {
   display: inline-flex;
-  gap: 12px;
   align-items: center;
 }
 
 .brand-logo {
-  width: 86px;
+  width: 104px;
   height: auto;
   object-fit: contain;
 }
@@ -1116,12 +1115,8 @@ label {
     white-space: nowrap;
   }
 
-  .brand small {
-    display: none;
-  }
-
   .brand-logo {
-    width: 72px;
+    width: 88px;
   }
 
   .main-nav {

@@ -103,10 +103,6 @@ function Header({ cartQuantity }) {
       <div className="main-nav">
         <Link className="brand" to="/" aria-label="SVI">
           <img className="brand-logo" src={logo} alt="SVI" />
-          <span>
-            <strong>SVI</strong>
-            <small>Instalações, materiais e serviços</small>
-          </span>
         </Link>
 
         <button className="menu-toggle" type="button" onClick={() => setMenuOpen((current) => !current)} aria-expanded={menuOpen} aria-controls="main-menu">
