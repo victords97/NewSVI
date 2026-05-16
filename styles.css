@@ -618,11 +618,12 @@ label {
 
 .card-actions {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr;
   gap: 10px;
 }
 
 .add-button,
+.cart-add-button,
 .small-button {
   min-height: 42px;
   border-radius: 8px;
@@ -640,6 +641,12 @@ label {
 .small-button {
   border: 1px solid var(--line);
   background: white;
+}
+
+.cart-add-button {
+  border: 1px solid rgba(0, 139, 67, 0.3);
+  background: var(--green-soft);
+  color: var(--green-dark);
 }
 
 .checkout-card {
@@ -805,6 +812,35 @@ label {
 .dialog-info li {
   color: var(--muted);
   line-height: 1.7;
+}
+
+.dialog-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.cart-feedback {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 90;
+  display: grid;
+  gap: 4px;
+  width: min(360px, calc(100vw - 36px));
+  border: 1px solid rgba(0, 139, 67, 0.28);
+  border-radius: 8px;
+  background: white;
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+}
+
+.cart-feedback strong {
+  color: var(--green-dark);
+}
+
+.cart-feedback span {
+  color: var(--muted);
+  line-height: 1.45;
 }
 
 .site-footer {
@@ -1289,6 +1325,12 @@ label {
   .checkout-dialog {
     width: calc(100vw - 20px);
     padding: 18px;
+  }
+
+  .cart-feedback {
+    right: 10px;
+    bottom: 10px;
+    width: calc(100vw - 20px);
   }
 
   .content-card p,

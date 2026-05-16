@@ -301,6 +301,7 @@ function Shop({ cart, subtotal, addToCart, changeQuantity }) {
   const [deliveryMode, setDeliveryMode] = useState("delivery");
   const [confirmation, setConfirmation] = useState("");
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [cartFeedback, setCartFeedback] = useState("");
   const category = params.get("categoria") || "all";
   const shipping = !cart.length || deliveryMode === "pickup" || subtotal >= 300 ? 0 : 18;
   const visibleBrands = useMemo(() => {
@@ -343,6 +344,20 @@ function Shop({ cart, subtotal, addToCart, changeQuantity }) {
       return;
     }
     setConfirmation(`Pedido SVI-${Math.floor(100000 + Math.random() * 900000)} criado. O acompanhamento segue por WhatsApp ou SMS.`);
+  };
+  const notifyAdded = (productName) => {
+    setCartFeedback(`${productName} foi adicionado ao carrinho.`);
+    window.clearTimeout(window.sviCartFeedbackTimer);
+    window.sviCartFeedbackTimer = window.setTimeout(() => setCartFeedback(""), 3200);
+  };
+  const handleAddToCart = (product) => {
+    addToCart(product.id);
+    notifyAdded(product.name);
+  };
+  const handleBuyNow = (product) => {
+    addToCart(product.id);
+    notifyAdded(product.name);
+    setCheckoutOpen(true);
   };
 
   return (
@@ -439,7 +454,8 @@ function Shop({ cart, subtotal, addToCart, changeQuantity }) {
                   <h3>{product.name}</h3>
                   <span className="price">{currency.format(product.price)}</span>
                   <div className="card-actions">
-                    <button className="add-button" onClick={() => addToCart(product.id)} type="button" disabled={product.stock === 0}>Comprar</button>
+                    <button className="add-button" onClick={() => handleBuyNow(product)} type="button" disabled={product.stock === 0}>Comprar agora</button>
+                    <button className="cart-add-button" onClick={() => handleAddToCart(product)} type="button" disabled={product.stock === 0}>Adicionar</button>
                     <button className="small-button" onClick={() => setSelectedProduct(product)} type="button">Detalhes</button>
                   </div>
                 </div>
@@ -451,7 +467,15 @@ function Shop({ cart, subtotal, addToCart, changeQuantity }) {
         <CartCard cart={cart} subtotal={subtotal} shipping={shipping} changeQuantity={changeQuantity} openCheckout={() => setCheckoutOpen(true)} />
       </section>
 
-      {selectedProduct && <ProductDialog product={selectedProduct} onClose={() => setSelectedProduct(null)} addToCart={addToCart} />}
+      {cartFeedback && <CartFeedback message={cartFeedback} />}
+      {selectedProduct && (
+        <ProductDialog
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          addToCart={() => handleAddToCart(selectedProduct)}
+          buyNow={() => handleBuyNow(selectedProduct)}
+        />
+      )}
       {checkoutOpen && (
         <CheckoutDialog
           confirmation={confirmation}
@@ -462,6 +486,15 @@ function Shop({ cart, subtotal, addToCart, changeQuantity }) {
         />
       )}
     </main>
+  );
+}
+
+function CartFeedback({ message }) {
+  return (
+    <div className="cart-feedback" role="status">
+      <strong>Produto adicionado</strong>
+      <span>{message}</span>
+    </div>
   );
 }
 
@@ -531,7 +564,7 @@ function CheckoutDialog({ confirmation, deliveryMode, finishOrder, onClose, setD
   );
 }
 
-function ProductDialog({ product, onClose, addToCart }) {
+function ProductDialog({ product, onClose, addToCart, buyNow }) {
   return (
     <div className="modal-layer" role="presentation" onMouseDown={onClose}>
       <section className="product-dialog react-dialog" role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()}>
@@ -544,9 +577,14 @@ function ProductDialog({ product, onClose, addToCart }) {
             <p>{product.brand} disponível para compra online, retirada ou entrega em Manaus.</p>
             <strong className="price">{currency.format(product.price)}</strong>
             <ul>{product.specs.map((spec) => <li key={spec}>{spec}</li>)}</ul>
-            <button className="primary-action full" onClick={() => { addToCart(product.id); onClose(); }} type="button" disabled={product.stock === 0}>
-              Adicionar ao carrinho
-            </button>
+            <div className="dialog-actions">
+              <button className="primary-action full" onClick={() => { buyNow(); onClose(); }} type="button" disabled={product.stock === 0}>
+                Comprar agora
+              </button>
+              <button className="secondary-action full" onClick={() => { addToCart(); onClose(); }} type="button" disabled={product.stock === 0}>
+                Adicionar ao carrinho
+              </button>
+            </div>
           </div>
         </div>
       </section>
