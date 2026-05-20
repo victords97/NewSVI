@@ -664,7 +664,10 @@ function CartCard({ amountToMinimum, cart, needsMinimumForDelivery, subtotal, sh
         )) : <div className="cart-empty">Seu carrinho está vazio.</div>}
       </div>
       <div className="summary-line"><span>Subtotal</span><strong>{currency.format(subtotal)}</strong></div>
-      <div className="summary-line free-shipping-line"><span>Entrega</span><strong>Frete grátis</strong></div>
+      <div className={`summary-line ${needsMinimumForDelivery ? "shipping-pending-line" : "free-shipping-line"}`}>
+        <span>Entrega</span>
+        <strong>{needsMinimumForDelivery ? "Disponível a partir de R$ 150,00" : "Frete grátis"}</strong>
+      </div>
       <div className="summary-total"><span>Total</span><strong>{currency.format(subtotal + shipping)}</strong></div>
       <p className={`minimum-order-note ${needsMinimumForDelivery ? "warning" : ""}`}>
         Pedido mínimo para entrega: {currency.format(minimumDeliveryOrder)}.

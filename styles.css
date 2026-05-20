@@ -792,6 +792,21 @@ label {
   color: var(--green-dark);
 }
 
+.shipping-pending-line {
+  align-items: flex-start;
+}
+
+.shipping-pending-line strong {
+  max-width: 190px;
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: #fff7f6;
+  color: var(--red);
+  font-size: 0.82rem;
+  line-height: 1.25;
+  text-align: right;
+}
+
 .minimum-order-note,
 .checkout-rule-note {
   grid-column: 1 / -1;
