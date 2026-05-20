@@ -905,6 +905,21 @@ function HistoryPage() {
 }
 
 function StoresPage() {
+  const stores = [
+    {
+      name: "Matriz",
+      address: "Av. Cosme Ferreira, 2116 - Coroado, Manaus - AM",
+      phone: "(92) 2123-4444",
+      hours: "Segunda a sexta: 8h às 17h. Sábado: 8h às 14h.",
+    },
+    {
+      name: "Filial",
+      address: "Av. Joaquim Gonzaga Pinheiro, 495 - Nossa Senhora das Graças, Manaus - AM",
+      phone: "(92) 2101-3780",
+      hours: "Segunda a sexta: 8h às 17h. Sábado: 8h às 14h.",
+    },
+  ];
+
   return (
     <main className="content-page">
       <Link className="page-logo" to="/"><img src={logo} alt="SVI" /></Link>
@@ -913,8 +928,26 @@ function StoresPage() {
         <img src={facade} alt="Fachada da matriz SVI" />
       </section>
       <section className="info-grid">
-        <article className="content-card"><h2>Matriz</h2><p>Av. Cosme Ferreira, 2116 - Coroado - FONE: (92) 2123-4444</p><p>Segunda a sexta: 8h às 17h. Sábado: 8h às 14h.</p></article>
-        <article className="content-card"><h2>Filial</h2><p>Av. Joaquim Gonzaga Pinheiro, 495 - Nossa Senhora das Graças - FONE: (92) 2101-3780</p><p>Segunda a sexta: 8h às 17h. Sábado: 8h às 14h.</p></article>
+        {stores.map((store) => {
+          const mapQuery = encodeURIComponent(`SVI ${store.address}`);
+          return (
+            <article className="content-card store-card" key={store.name}>
+              <h2>{store.name}</h2>
+              <p>{store.address}</p>
+              <p>FONE: {store.phone}</p>
+              <p>{store.hours}</p>
+              <a className="secondary-action map-action" href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`} target="_blank" rel="noreferrer">
+                Abrir no Google Maps
+              </a>
+              <iframe
+                title={`Mapa da SVI ${store.name}`}
+                src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </article>
+          );
+        })}
       </section>
     </main>
   );

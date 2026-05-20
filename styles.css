@@ -1273,6 +1273,30 @@ label {
   max-width: 980px;
 }
 
+.store-card {
+  display: grid;
+  gap: 10px;
+}
+
+.store-card p {
+  margin: 0;
+  text-align: left;
+}
+
+.store-card iframe {
+  width: 100%;
+  min-height: 260px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--soft);
+}
+
+.map-action {
+  width: fit-content;
+  margin-top: 6px;
+}
+
 .info-grid,
 .brand-grid {
   display: grid;
