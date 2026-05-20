@@ -237,9 +237,11 @@ img {
 
 .slide img {
   min-height: 0;
-  object-fit: cover;
+  object-fit: contain;
   padding: 0;
-  background: radial-gradient(circle at 72% 42%, #ffffff 0, #e8f8ed 42%, #b9dfc7 100%);
+  background:
+    linear-gradient(90deg, rgba(0, 63, 50, 0.9), rgba(0, 139, 67, 0.32)),
+    radial-gradient(circle at 72% 42%, #ffffff 0, #e8f8ed 42%, #b9dfc7 100%);
   filter: saturate(1.04);
 }
 
