@@ -1188,12 +1188,12 @@ label {
 
 .brand-service-card {
   min-height: 150px;
-  align-items: end;
+  align-items: center;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(227, 245, 233, 0.92)),
-    var(--brand-bg) center 42%/78% auto no-repeat !important;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(227, 245, 233, 0.46)),
+    var(--brand-bg) center/92% auto no-repeat !important;
   font-size: 1.1rem;
-  padding: 0 0 20px;
+  padding: 0;
 }
 
 .brand-service-card::before {
@@ -1202,7 +1202,7 @@ label {
 
 .brand-service-card::after {
   position: absolute;
-  inset: auto 16px 10px;
+  inset: auto 16px 16px;
   height: 3px;
   border-radius: 999px;
   background: var(--green);
