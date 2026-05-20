@@ -226,7 +226,8 @@ function Home() {
       brand: "Jotun",
       title: "Acabamento técnico e industrial",
       text: "Produtos para manutenção, proteção e acabamento com apoio do time consultivo.",
-      image: "https://dcdn-us.mitiendanube.com/stores/002/472/736/themes/amazonas/2-slide-1735228953936-5278343610-3adc3bf592d613f932834f8d5b6be5ab1735228957-1024-1024.webp?9071093781910199982",
+      image: "https://dcdn-us.mitiendanube.com/stores/002/472/736/themes/amazonas/2-slide-1735228953933-8199334112-b9aee56ef919b756c96f6e323c1412f01735228955-1024-1024.webp?9071093781910199982",
+      mobileImage: "https://dcdn-us.mitiendanube.com/stores/002/472/736/themes/amazonas/2-slide-1735228953936-5278343610-3adc3bf592d613f932834f8d5b6be5ab1735228957-1024-1024.webp?9071093781910199982",
       cta: "Ver produtos",
       href: "/produtos?categoria=pinturas",
     },
@@ -274,7 +275,10 @@ function Home() {
       >
         {slides.map((slide, index) => (
           <div className={`slide ${active === index ? "active" : ""}`} key={slide.brand}>
-            <img src={slide.image} alt={slide.title} />
+            <picture>
+              {slide.mobileImage && <source media="(max-width: 640px)" srcSet={slide.mobileImage} />}
+              <img src={slide.image} alt={slide.title} />
+            </picture>
             <div className="slide-copy">
               <span>{slide.brand}</span>
               <h1>{slide.title}</h1>

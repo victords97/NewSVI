@@ -227,9 +227,14 @@ img {
   opacity: 1;
 }
 
+.slide picture,
 .slide img {
+  display: block;
   width: 100%;
   height: 100%;
+}
+
+.slide img {
   min-height: calc(100vh - 112px);
   object-fit: contain;
   padding: clamp(60px, 8vw, 120px) clamp(24px, 8vw, 120px);
@@ -1422,9 +1427,13 @@ label {
     height: min(560px, calc(100svh - 156px));
   }
 
+  .slide picture,
   .slide img {
     min-height: 0;
     height: 100%;
+  }
+
+  .slide img {
     padding: 160px 24px 92px;
     object-position: center center;
   }
