@@ -794,6 +794,7 @@ label {
 
 .minimum-order-note,
 .checkout-rule-note {
+  grid-column: 1 / -1;
   margin: 10px 0 0;
   border: 1px solid rgba(0, 139, 67, 0.22);
   border-radius: 8px;
@@ -810,6 +811,20 @@ label {
   border-color: rgba(168, 61, 52, 0.28);
   background: #fff7f6;
   color: var(--red);
+}
+
+.checkout-actions-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 12px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.checkout-actions-row .primary-action,
+.checkout-actions-row .secondary-action {
+  min-height: 50px;
 }
 
 .cart-empty,
@@ -1562,6 +1577,10 @@ label {
   .checkout-dialog {
     width: calc(100vw - 20px);
     padding: 18px;
+  }
+
+  .checkout-actions-row {
+    grid-template-columns: 1fr;
   }
 
   .cart-preview-dialog {

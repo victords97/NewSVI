@@ -741,11 +741,14 @@ function CheckoutDialog({ amountToMinimum, confirmation, deliveryMode, finishOrd
             </select>
           </label>
           <label className="wide">Endereço ou loja de retirada<input name="address" type="text" placeholder="Rua, número, bairro ou unidade SVI" /></label>
+          <div className="checkout-actions-row">
+            <button className="secondary-action" type="button" onClick={onClose}>Revisar pedido</button>
+            <button className="primary-action" type="submit">Criar pedido</button>
+          </div>
           <p className={`checkout-rule-note ${needsMinimumForDelivery ? "warning" : ""}`}>
             Frete grátis em Manaus. Pedido mínimo para entrega: {currency.format(minimumDeliveryOrder)}.
             {needsMinimumForDelivery ? ` Faltam ${currency.format(amountToMinimum)} para escolher entrega.` : ""}
           </p>
-          <button className="primary-action full" type="submit">Criar pedido</button>
           <p className="confirmation" role="status">{confirmation}</p>
         </form>
       </section>
