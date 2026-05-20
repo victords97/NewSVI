@@ -207,6 +207,13 @@ img {
   min-height: calc(100vh - 112px);
   overflow: hidden;
   background: var(--ink);
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.slideshow:active {
+  cursor: grabbing;
 }
 
 .slide {

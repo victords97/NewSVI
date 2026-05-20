@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Link, NavLink, Route, Routes, useSearchParams } from "react-router-dom";
 import { categories, currency, products, sviLinks } from "./data";
@@ -232,15 +232,46 @@ function Home() {
     },
   ];
   const [active, setActive] = useState(0);
+  const dragStart = useRef(null);
+  const dragDelta = useRef(0);
 
   useEffect(() => {
     const timer = setInterval(() => setActive((current) => (current + 1) % slides.length), 5200);
     return () => clearInterval(timer);
   }, [slides.length]);
+  const goToSlide = (direction) => {
+    setActive((current) => (current + direction + slides.length) % slides.length);
+  };
+  const handleDragStart = (event) => {
+    dragStart.current = event.clientX ?? event.touches?.[0]?.clientX ?? 0;
+    dragDelta.current = 0;
+  };
+  const handleDragMove = (event) => {
+    if (dragStart.current === null) return;
+    const currentX = event.clientX ?? event.touches?.[0]?.clientX ?? dragStart.current;
+    dragDelta.current = currentX - dragStart.current;
+  };
+  const handleDragEnd = () => {
+    if (Math.abs(dragDelta.current) > 48) {
+      goToSlide(dragDelta.current < 0 ? 1 : -1);
+    }
+    dragStart.current = null;
+    dragDelta.current = 0;
+  };
 
   return (
     <main>
-      <section className="slideshow" aria-label="Destaques de produtos">
+      <section
+        className="slideshow"
+        aria-label="Destaques de produtos"
+        onPointerDown={handleDragStart}
+        onPointerMove={handleDragMove}
+        onPointerUp={handleDragEnd}
+        onPointerCancel={handleDragEnd}
+        onTouchStart={handleDragStart}
+        onTouchMove={handleDragMove}
+        onTouchEnd={handleDragEnd}
+      >
         {slides.map((slide, index) => (
           <div className={`slide ${active === index ? "active" : ""}`} key={slide.brand}>
             <img src={slide.image} alt={slide.title} />
