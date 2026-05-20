@@ -68,6 +68,39 @@ function useCart() {
   return { cart, quantity, subtotal, addToCart, changeQuantity, clearCart };
 }
 
+function useBodyScrollLock(isLocked) {
+  useEffect(() => {
+    if (!isLocked) return undefined;
+
+    const scrollY = window.scrollY;
+    const previousStyles = {
+      position: document.body.style.position,
+      top: document.body.style.top,
+      left: document.body.style.left,
+      right: document.body.style.right,
+      width: document.body.style.width,
+      overflow: document.body.style.overflow,
+    };
+
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.position = previousStyles.position;
+      document.body.style.top = previousStyles.top;
+      document.body.style.left = previousStyles.left;
+      document.body.style.right = previousStyles.right;
+      document.body.style.width = previousStyles.width;
+      document.body.style.overflow = previousStyles.overflow;
+      window.scrollTo(0, scrollY);
+    };
+  }, [isLocked]);
+}
+
 function Header({ cartQuantity, onOpenCart }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
@@ -370,6 +403,7 @@ function Shop({ cart, subtotal, addToCart, changeQuantity, clearCart }) {
   const [cartFeedback, setCartFeedback] = useState("");
   const category = params.get("categoria") || "all";
   const shipping = !cart.length || deliveryMode === "pickup" || subtotal >= 300 ? 0 : 18;
+  useBodyScrollLock(Boolean(selectedProduct || checkoutOpen));
   const visibleBrands = useMemo(() => {
     const categoryProducts = products.filter((product) => category === "all" || product.category === category);
     return [...new Set(categoryProducts.map((product) => product.brand))].sort();
@@ -879,6 +913,7 @@ function ScrollToTop() {
 function App() {
   const cartApi = useCart();
   const [cartPreviewOpen, setCartPreviewOpen] = useState(false);
+  useBodyScrollLock(cartPreviewOpen);
   return (
     <BrowserRouter>
       <ScrollToTop />

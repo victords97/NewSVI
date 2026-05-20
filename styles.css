@@ -807,10 +807,14 @@ label {
 
 .product-dialog {
   width: min(860px, calc(100vw - 28px));
+  max-height: calc(100dvh - 28px);
+  overflow: auto;
   border: 0;
   border-radius: 8px;
   padding: 0;
   box-shadow: var(--shadow);
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .checkout-dialog {
@@ -822,6 +826,8 @@ label {
   background: white;
   box-shadow: var(--shadow);
   padding: clamp(18px, 3vw, 30px);
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .cart-preview-dialog {
@@ -833,6 +839,8 @@ label {
   background: white;
   box-shadow: var(--shadow);
   padding: clamp(18px, 3vw, 30px);
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .cart-preview-actions {
@@ -848,14 +856,21 @@ label {
   display: grid;
   place-items: center;
   padding: 18px;
+  overflow-y: auto;
   background: rgba(23, 32, 38, 0.46);
+  overscroll-behavior: contain;
 }
 
 .react-dialog {
   position: relative;
   display: block;
-  overflow: hidden;
   background: white;
+}
+
+.product-dialog.react-dialog,
+.checkout-dialog.react-dialog,
+.cart-preview-dialog.react-dialog {
+  overflow: auto;
 }
 
 .product-dialog::backdrop {
