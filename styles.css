@@ -1176,6 +1176,7 @@ label {
   position: relative;
   overflow: hidden;
   display: grid;
+  grid-template-rows: 1fr auto;
   min-height: 84px;
   place-items: center;
   border: 1px solid var(--line);
@@ -1186,25 +1187,25 @@ label {
 }
 
 .brand-service-card {
-  min-height: 132px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(227, 245, 233, 0.92)),
-    var(--brand-bg) center/70% auto no-repeat !important;
+  min-height: 150px;
+  align-items: end;
+  background: white !important;
   font-size: 1.1rem;
+  padding: 0 0 18px;
 }
 
 .brand-service-card::before {
   position: absolute;
-  inset: 0;
-  background: var(--brand-bg) center/72% auto no-repeat;
+  inset: 18px 18px 54px;
+  border-radius: 8px;
+  background: var(--brand-bg) center/contain no-repeat;
   content: "";
-  opacity: 0.2;
-  filter: saturate(0.85);
+  opacity: 1;
 }
 
 .brand-service-card::after {
   position: absolute;
-  inset: auto 16px 16px;
+  inset: auto 16px 10px;
   height: 3px;
   border-radius: 999px;
   background: var(--green);
@@ -1213,7 +1214,7 @@ label {
 
 .brand-service-card {
   color: var(--green-dark);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.88);
+  text-shadow: none;
 }
 
 .history-page {
