@@ -1475,9 +1475,16 @@ label {
   }
 
   .slide-dots {
-    right: 20px;
-    bottom: 26px;
-    left: auto;
+    right: auto;
+    bottom: 12px;
+    left: 50%;
+    gap: 8px;
+    transform: translateX(-50%);
+  }
+
+  .slide-dots button {
+    width: 36px;
+    height: 10px;
   }
 
   .benefits-grid,
