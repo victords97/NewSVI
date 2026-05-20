@@ -131,8 +131,38 @@ function Header({ cartQuantity, onOpenCart }) {
 function Footer() {
   return (
     <footer className="site-footer">
-      <strong>SVI</strong>
-      <span>Copyright S V INSTALACOES LTDA - 84089358000122 - 2026. Todos os direitos reservados.</span>
+      <div className="footer-brand">
+        <strong>SVI</strong>
+        <span>Copyright S V INSTALACOES LTDA - 84089358000122 - 2026. Todos os direitos reservados.</span>
+      </div>
+      <div className="developer-credit">
+        <span>Desenvolvido por Victor Pontes Dos Santos</span>
+        <div className="developer-links">
+          <a href="https://github.com/victords97" target="_blank" rel="noreferrer" aria-label="GitHub de Victor Pontes">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7.3A5.7 5.7 0 0 0 19.3 3.3 5.3 5.3 0 0 0 19.2 0S18 0 15.3 1.5a13.4 13.4 0 0 0-6.6 0C6 0 4.8 0 4.8 0a5.3 5.3 0 0 0-.1 3.3 5.7 5.7 0 0 0-1.5 3.9c0 5.7 3.5 6.9 6.8 7.3a4.8 4.8 0 0 0-1 3.5v4" />
+              <path d="M9 18c-4.5 2-5-2-7-2" />
+            </svg>
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/in/victor-pontes-7271631a0/" target="_blank" rel="noreferrer" aria-label="LinkedIn de Victor Pontes">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6Z" />
+              <path d="M2 9h4v12H2z" />
+              <circle cx="4" cy="4" r="2" />
+            </svg>
+            LinkedIn
+          </a>
+          <a href="https://portf-lio-seven-theta.vercel.app/" target="_blank" rel="noreferrer" aria-label="Portfólio de Victor Pontes">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M10 6V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v1" />
+              <rect x="3" y="6" width="18" height="14" rx="2" />
+              <path d="M3 12h18" />
+            </svg>
+            Portfólio
+          </a>
+        </div>
+      </div>
     </footer>
   );
 }

@@ -883,7 +883,7 @@ label {
 
 .site-footer {
   display: grid;
-  gap: 8px;
+  gap: 18px;
   justify-items: center;
   text-align: center;
   padding: 24px clamp(16px, 4vw, 56px);
@@ -895,6 +895,54 @@ label {
 .site-footer strong {
   color: white;
   font-size: 1.1rem;
+}
+
+.footer-brand,
+.developer-credit {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+}
+
+.developer-credit {
+  width: 100%;
+  max-width: 760px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.developer-credit > span {
+  color: white;
+  font-weight: 800;
+}
+
+.developer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.developer-links a {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  padding: 0 12px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 800;
+}
+
+.developer-links svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
 }
 
 .supplier-section {
