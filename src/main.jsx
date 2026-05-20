@@ -277,7 +277,6 @@ function Home() {
         {slides.map((slide, index) => (
           <div className={`slide ${active === index ? "active" : ""}`} key={slide.brand}>
             <picture>
-              {slide.mobileImage && <source media="(max-width: 640px)" srcSet={slide.mobileImage} />}
               <img src={slide.image} alt={slide.title} />
             </picture>
             <div className="slide-copy">

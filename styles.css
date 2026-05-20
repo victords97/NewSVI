@@ -1430,8 +1430,9 @@ label {
   .slideshow {
     min-height: auto;
     height: auto;
-    aspect-ratio: 1024 / 520;
-    max-height: 430px;
+    aspect-ratio: 16 / 9;
+    min-height: 320px;
+    max-height: 480px;
   }
 
   .slide picture,
