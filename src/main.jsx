@@ -7,6 +7,7 @@ import "../styles.css";
 const logo = "/assets/SVI.png";
 const facade = "https://d2r9epyceweg5n.cloudfront.net/stores/002/472/736/rte/FACHADA.png";
 const historyImage = "/assets/historia-svi.png";
+const minimumDeliveryOrder = 150;
 const categoryImages = {
   hidraulicos: "/assets/materiaishidraulicos.png",
   eletricos: "/assets/materiaiseletricos.png",
@@ -334,9 +335,9 @@ function Home() {
       </section>
 
       <section className="benefits-grid" aria-label="Benefícios de compra">
-        <article>
+        <article className="highlight-benefit">
           <strong>Frete Grátis*</strong>
-          <span>Entregamos em toda Manaus</span>
+          <span>Entregamos em toda Manaus para pedidos a partir de {currency.format(minimumDeliveryOrder)}</span>
         </article>
         <article>
           <strong>Parcelamos até 12x</strong>
@@ -402,7 +403,9 @@ function Shop({ cart, subtotal, addToCart, changeQuantity, clearCart }) {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [cartFeedback, setCartFeedback] = useState("");
   const category = params.get("categoria") || "all";
-  const shipping = !cart.length || deliveryMode === "pickup" || subtotal >= 300 ? 0 : 18;
+  const shipping = 0;
+  const needsMinimumForDelivery = deliveryMode === "delivery" && subtotal > 0 && subtotal < minimumDeliveryOrder;
+  const amountToMinimum = Math.max(minimumDeliveryOrder - subtotal, 0);
   useBodyScrollLock(Boolean(selectedProduct || checkoutOpen));
   const visibleBrands = useMemo(() => {
     const categoryProducts = products.filter((product) => category === "all" || product.category === category);
@@ -443,6 +446,10 @@ function Shop({ cart, subtotal, addToCart, changeQuantity, clearCart }) {
       setConfirmation("Preencha nome, celular e endereço ou loja de retirada.");
       return;
     }
+    if (deliveryMode === "delivery" && subtotal < minimumDeliveryOrder) {
+      setConfirmation(`Para entrega em Manaus, o pedido mínimo é de ${currency.format(minimumDeliveryOrder)}. Adicione mais ${currency.format(amountToMinimum)} ou selecione retirada na loja.`);
+      return;
+    }
     const orderId = `SVI-${Math.floor(100000 + Math.random() * 900000)}`;
     const payment = form.get("payment");
     const orderItems = cart
@@ -461,7 +468,7 @@ function Shop({ cart, subtotal, addToCart, changeQuantity, clearCart }) {
       orderItems,
       "",
       `Subtotal: ${currency.format(subtotal)}`,
-      `Entrega: ${shipping === 0 ? "Grátis" : currency.format(shipping)}`,
+      "Entrega: Frete grátis",
       `Total: ${currency.format(subtotal + shipping)}`,
     ].join("\n");
 
@@ -489,7 +496,7 @@ function Shop({ cart, subtotal, addToCart, changeQuantity, clearCart }) {
         <div>
           <span>Loja online SVI</span>
           <h1>Produtos disponíveis para compra direta</h1>
-          <p>Escolha a categoria, adicione ao carrinho e finalize o pedido em uma experiência moderna, sem perder o atendimento consultivo.</p>
+          <p>Escolha a categoria, adicione ao carrinho e finalize o pedido com frete grátis em Manaus para compras a partir de {currency.format(minimumDeliveryOrder)}.</p>
         </div>
         <form className="shop-search" role="search">
           <input value={query} onChange={(event) => setQuery(event.target.value)} type="search" placeholder="Buscar produto, marca ou código" />
@@ -588,7 +595,16 @@ function Shop({ cart, subtotal, addToCart, changeQuantity, clearCart }) {
           </div>
         </section>
 
-        <CartCard cart={cart} subtotal={subtotal} shipping={shipping} changeQuantity={changeQuantity} clearCart={clearCart} openCheckout={() => setCheckoutOpen(true)} />
+        <CartCard
+          amountToMinimum={amountToMinimum}
+          cart={cart}
+          needsMinimumForDelivery={needsMinimumForDelivery}
+          subtotal={subtotal}
+          shipping={shipping}
+          changeQuantity={changeQuantity}
+          clearCart={clearCart}
+          openCheckout={() => setCheckoutOpen(true)}
+        />
       </section>
 
       {cartFeedback && <CartFeedback message={cartFeedback} />}
@@ -605,6 +621,8 @@ function Shop({ cart, subtotal, addToCart, changeQuantity, clearCart }) {
           confirmation={confirmation}
           deliveryMode={deliveryMode}
           finishOrder={finishOrder}
+          needsMinimumForDelivery={needsMinimumForDelivery}
+          amountToMinimum={amountToMinimum}
           onClose={() => setCheckoutOpen(false)}
           setDeliveryMode={setDeliveryMode}
         />
@@ -622,7 +640,7 @@ function CartFeedback({ message }) {
   );
 }
 
-function CartCard({ cart, subtotal, shipping, changeQuantity, clearCart, openCheckout }) {
+function CartCard({ amountToMinimum, cart, needsMinimumForDelivery, subtotal, shipping, changeQuantity, clearCart, openCheckout }) {
   return (
     <aside className="checkout-card" id="carrinho">
       <div className="checkout-card-head">
@@ -646,8 +664,12 @@ function CartCard({ cart, subtotal, shipping, changeQuantity, clearCart, openChe
         )) : <div className="cart-empty">Seu carrinho está vazio.</div>}
       </div>
       <div className="summary-line"><span>Subtotal</span><strong>{currency.format(subtotal)}</strong></div>
-      <div className="summary-line"><span>Entrega</span><strong>{shipping === 0 ? "Grátis" : currency.format(shipping)}</strong></div>
+      <div className="summary-line free-shipping-line"><span>Entrega</span><strong>Frete grátis</strong></div>
       <div className="summary-total"><span>Total</span><strong>{currency.format(subtotal + shipping)}</strong></div>
+      <p className={`minimum-order-note ${needsMinimumForDelivery ? "warning" : ""}`}>
+        Pedido mínimo para entrega: {currency.format(minimumDeliveryOrder)}.
+        {needsMinimumForDelivery ? ` Faltam ${currency.format(amountToMinimum)} para entrega em Manaus.` : " Retirada na loja disponível para pedidos abaixo desse valor."}
+      </p>
       <div className="cart-action-stack">
         <button className="clear-cart-button" type="button" onClick={clearCart} disabled={!cart.length}>Limpar carrinho</button>
         <button className="primary-action full" type="button" onClick={openCheckout}>Finalizar pedido</button>
@@ -691,7 +713,7 @@ function CartPreviewDialog({ cart, subtotal, onClose, changeQuantity, clearCart 
   );
 }
 
-function CheckoutDialog({ confirmation, deliveryMode, finishOrder, onClose, setDeliveryMode }) {
+function CheckoutDialog({ amountToMinimum, confirmation, deliveryMode, finishOrder, needsMinimumForDelivery, onClose, setDeliveryMode }) {
   return (
     <div className="modal-layer" role="presentation" onMouseDown={onClose}>
       <section className="checkout-dialog react-dialog" role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()}>
@@ -719,6 +741,10 @@ function CheckoutDialog({ confirmation, deliveryMode, finishOrder, onClose, setD
             </select>
           </label>
           <label className="wide">Endereço ou loja de retirada<input name="address" type="text" placeholder="Rua, número, bairro ou unidade SVI" /></label>
+          <p className={`checkout-rule-note ${needsMinimumForDelivery ? "warning" : ""}`}>
+            Frete grátis em Manaus. Pedido mínimo para entrega: {currency.format(minimumDeliveryOrder)}.
+            {needsMinimumForDelivery ? ` Faltam ${currency.format(amountToMinimum)} para escolher entrega.` : ""}
+          </p>
           <button className="primary-action full" type="submit">Criar pedido</button>
           <p className="confirmation" role="status">{confirmation}</p>
         </form>
