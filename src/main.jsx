@@ -67,7 +67,7 @@ function useCart() {
   return { cart, quantity, subtotal, addToCart, changeQuantity };
 }
 
-function Header({ cartQuantity }) {
+function Header({ cartQuantity, onOpenCart }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
 
@@ -91,13 +91,13 @@ function Header({ cartQuantity }) {
         <span className="phone">Atendimento: 92 2123-4411</span>
         <a className="account-link" href={sviLinks.jobs} target="_blank" rel="noreferrer">Trabalhe Conosco</a>
         <a className="account-link" href={sviLinks.collaborator} target="_blank" rel="noreferrer">Sou Colaborador</a>
-        <Link className="cart-link" to="/produtos#carrinho" aria-label={`Meu carrinho com ${cartQuantity} itens`}>
+        <button className="cart-link" type="button" onClick={onOpenCart} aria-label={`Meu carrinho com ${cartQuantity} itens`}>
           <svg aria-hidden="true" viewBox="0 0 24 24">
             <path d="M6 6h15l-1.5 8.5H8L6 3H3" />
             <path d="M9 20a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 9 20Zm9 0a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 18 20Z" />
           </svg>
           Meu carrinho <span>{cartQuantity}</span>
-        </Link>
+        </button>
       </div>
 
       <div className="main-nav">
@@ -551,6 +551,39 @@ function CartCard({ cart, subtotal, shipping, changeQuantity, openCheckout }) {
   );
 }
 
+function CartPreviewDialog({ cart, subtotal, onClose, changeQuantity }) {
+  return (
+    <div className="modal-layer" role="presentation" onMouseDown={onClose}>
+      <section className="cart-preview-dialog react-dialog" role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()}>
+        <button className="dialog-close" type="button" onClick={onClose} aria-label="Fechar carrinho">x</button>
+        <div className="section-head">
+          <span>Meu carrinho</span>
+          <h2>Produtos adicionados</h2>
+        </div>
+        <div className="cart-items">
+          {cart.length ? cart.map((item) => (
+            <article className="cart-item" key={item.product.id}>
+              <div>
+                <strong>{item.product.name}</strong>
+                <small>{currency.format(item.product.price)} cada</small>
+              </div>
+              <div className="quantity-controls">
+                <button onClick={() => changeQuantity(item.product.id, -1)} type="button">-</button>
+                <strong>{item.quantity}</strong>
+                <button onClick={() => changeQuantity(item.product.id, 1)} type="button">+</button>
+              </div>
+            </article>
+          )) : <div className="cart-empty">Seu carrinho está vazio.</div>}
+        </div>
+        <div className="summary-total"><span>Subtotal</span><strong>{currency.format(subtotal)}</strong></div>
+        <div className="cart-preview-actions">
+          <Link className="secondary-action full" to="/produtos" onClick={onClose}>Continuar comprando</Link>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function CheckoutDialog({ confirmation, deliveryMode, finishOrder, onClose, setDeliveryMode }) {
   return (
     <div className="modal-layer" role="presentation" onMouseDown={onClose}>
@@ -761,9 +794,10 @@ function TextPage({ title, tag, children }) {
 
 function App() {
   const cartApi = useCart();
+  const [cartPreviewOpen, setCartPreviewOpen] = useState(false);
   return (
     <BrowserRouter>
-      <Header cartQuantity={cartApi.quantity} />
+      <Header cartQuantity={cartApi.quantity} onOpenCart={() => setCartPreviewOpen(true)} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/produtos" element={<Shop {...cartApi} />} />
@@ -775,6 +809,14 @@ function App() {
         <Route path="/troca-devolucao" element={<TextPage tag="Troca e Devolução" title="Regras para compras e pedidos"><p><strong>Não fazemos troca entre lojas:</strong> a troca ocorre somente na loja onde foi emitida a venda.</p><p>Para qualquer troca de produtos é necessário apresentar nota ou cupom fiscal.</p><p>Compras feitas por telefone ou internet podem acionar troca e devolução em até 7 dias a partir da entrega.</p></TextPage>} />
         <Route path="/assistencia-tecnica" element={<TextPage tag="Assistência Técnica" title="Fabricantes atendidos"><p>A SVI direciona o cliente para os canais oficiais de assistência de marcas como Makita, Lorenzetti, Fame, Intelbras, Tramontina, Tigre, Starrett, Bosch e Legrand.</p><div className="brand-grid"><a href="https://www.makita.com.br">Makita</a><a href="https://www.lorenzetti.com.br">Lorenzetti</a><a href="https://www.tigre.com.br">Tigre</a><a href="https://www.boschacessorios.com.br">Bosch</a></div></TextPage>} />
       </Routes>
+      {cartPreviewOpen && (
+        <CartPreviewDialog
+          cart={cartApi.cart}
+          subtotal={cartApi.subtotal}
+          changeQuantity={cartApi.changeQuantity}
+          onClose={() => setCartPreviewOpen(false)}
+        />
+      )}
       <SupplierCarousel />
       <Footer />
     </BrowserRouter>

@@ -90,6 +90,12 @@ img {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  font-weight: inherit;
 }
 
 .social-link {
@@ -757,6 +763,21 @@ label {
   padding: clamp(18px, 3vw, 30px);
 }
 
+.cart-preview-dialog {
+  position: relative;
+  width: min(560px, calc(100vw - 28px));
+  max-height: calc(100dvh - 28px);
+  overflow: auto;
+  border-radius: 8px;
+  background: white;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 30px);
+}
+
+.cart-preview-actions {
+  margin-top: 16px;
+}
+
 .modal-layer {
   position: fixed;
   inset: 0;
@@ -1323,6 +1344,11 @@ label {
   }
 
   .checkout-dialog {
+    width: calc(100vw - 20px);
+    padding: 18px;
+  }
+
+  .cart-preview-dialog {
     width: calc(100vw - 20px);
     padding: 18px;
   }
