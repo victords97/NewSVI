@@ -1,7 +1,7 @@
 export const categories = [
   { id: "all", name: "Todos" },
-  { id: "hidraulicos", name: "Hidraulicos" },
-  { id: "eletricos", name: "Eletricos" },
+  { id: "hidraulicos", name: "Hidráulicos" },
+  { id: "eletricos", name: "Elétricos" },
   { id: "pinturas", name: "Pinturas" },
   { id: "equipamentos", name: "Equipamentos" },
 ];

@@ -60,11 +60,12 @@ function useCart() {
         .filter((item) => item.quantity > 0)
     );
   };
+  const clearCart = () => setCart([]);
 
   const quantity = cart.reduce((total, item) => total + item.quantity, 0);
   const subtotal = cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
 
-  return { cart, quantity, subtotal, addToCart, changeQuantity };
+  return { cart, quantity, subtotal, addToCart, changeQuantity, clearCart };
 }
 
 function Header({ cartQuantity, onOpenCart }) {
@@ -290,7 +291,7 @@ function departmentDescription(categoryId) {
   }[categoryId];
 }
 
-function Shop({ cart, subtotal, addToCart, changeQuantity }) {
+function Shop({ cart, subtotal, addToCart, changeQuantity, clearCart }) {
   const [params, setParams] = useSearchParams();
   const [query, setQuery] = useState("");
   const [stockOnly, setStockOnly] = useState(true);
@@ -487,7 +488,7 @@ function Shop({ cart, subtotal, addToCart, changeQuantity }) {
           </div>
         </section>
 
-        <CartCard cart={cart} subtotal={subtotal} shipping={shipping} changeQuantity={changeQuantity} openCheckout={() => setCheckoutOpen(true)} />
+        <CartCard cart={cart} subtotal={subtotal} shipping={shipping} changeQuantity={changeQuantity} clearCart={clearCart} openCheckout={() => setCheckoutOpen(true)} />
       </section>
 
       {cartFeedback && <CartFeedback message={cartFeedback} />}
@@ -521,7 +522,7 @@ function CartFeedback({ message }) {
   );
 }
 
-function CartCard({ cart, subtotal, shipping, changeQuantity, openCheckout }) {
+function CartCard({ cart, subtotal, shipping, changeQuantity, clearCart, openCheckout }) {
   return (
     <aside className="checkout-card" id="carrinho">
       <div className="checkout-card-head">
@@ -546,12 +547,13 @@ function CartCard({ cart, subtotal, shipping, changeQuantity, openCheckout }) {
       <div className="summary-line"><span>Subtotal</span><strong>{currency.format(subtotal)}</strong></div>
       <div className="summary-line"><span>Entrega</span><strong>{shipping === 0 ? "Grátis" : currency.format(shipping)}</strong></div>
       <div className="summary-total"><span>Total</span><strong>{currency.format(subtotal + shipping)}</strong></div>
+      <button className="clear-cart-button" type="button" onClick={clearCart} disabled={!cart.length}>Limpar carrinho</button>
       <button className="primary-action full" type="button" onClick={openCheckout}>Finalizar pedido</button>
     </aside>
   );
 }
 
-function CartPreviewDialog({ cart, subtotal, onClose, changeQuantity }) {
+function CartPreviewDialog({ cart, subtotal, onClose, changeQuantity, clearCart }) {
   return (
     <div className="modal-layer" role="presentation" onMouseDown={onClose}>
       <section className="cart-preview-dialog react-dialog" role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()}>
@@ -577,6 +579,7 @@ function CartPreviewDialog({ cart, subtotal, onClose, changeQuantity }) {
         </div>
         <div className="summary-total"><span>Subtotal</span><strong>{currency.format(subtotal)}</strong></div>
         <div className="cart-preview-actions">
+          <button className="clear-cart-button" type="button" onClick={clearCart} disabled={!cart.length}>Limpar carrinho</button>
           <Link className="secondary-action full" to="/produtos" onClick={onClose}>Continuar comprando</Link>
         </div>
       </section>
@@ -814,6 +817,7 @@ function App() {
           cart={cartApi.cart}
           subtotal={cartApi.subtotal}
           changeQuantity={cartApi.changeQuantity}
+          clearCart={cartApi.clearCart}
           onClose={() => setCartPreviewOpen(false)}
         />
       )}
