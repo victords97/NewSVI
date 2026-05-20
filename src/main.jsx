@@ -212,7 +212,7 @@ function Home() {
       text: "Tubos, conexões, registros e acessórios para obra, manutenção e reposição.",
       image: "https://dcdn-us.mitiendanube.com/stores/002/472/736/themes/amazonas/2-slide-1717706013453-2303463716-31070fb5da39fba5945f39084a0fad4f1717706014-1024-1024.webp?9071093781910199982",
       mobileImage: "https://dcdn-us.mitiendanube.com/stores/002/472/736/themes/amazonas/2-slide-1717706013456-108773263-aac4553ed3257a2f0b96acd0c12cb0901717706016-1024-1024.webp?9071093781910199982",
-      cta: "Comprar hidráulicos",
+      cta: "Ver Produtos",
       href: "/produtos?categoria=hidraulicos",
     },
     {
@@ -220,7 +220,7 @@ function Home() {
       title: "Tintas e ferramentas para pintura",
       text: "Escolha cores, complementos e materiais de aplicação com retirada ou entrega.",
       image: "/assets/suvinil.png",
-      cta: "Comprar pinturas",
+      cta: "Ver Produtos",
       href: "/produtos?categoria=pinturas",
     },
     {
@@ -229,7 +229,7 @@ function Home() {
       text: "Produtos para manutenção, proteção e acabamento com apoio do time consultivo.",
       image: "https://dcdn-us.mitiendanube.com/stores/002/472/736/themes/amazonas/2-slide-1735228953933-8199334112-b9aee56ef919b756c96f6e323c1412f01735228955-1024-1024.webp?9071093781910199982",
       mobileImage: "https://dcdn-us.mitiendanube.com/stores/002/472/736/themes/amazonas/2-slide-1735228953936-5278343610-3adc3bf592d613f932834f8d5b6be5ab1735228957-1024-1024.webp?9071093781910199982",
-      cta: "Ver produtos",
+      cta: "Ver Produtos",
       href: "/produtos?categoria=pinturas",
     },
   ];
