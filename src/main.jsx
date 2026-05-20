@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Link, NavLink, Route, Routes, useSearchParams } from "react-router-dom";
+import { BrowserRouter, Link, NavLink, Route, Routes, useLocation, useSearchParams } from "react-router-dom";
 import { categories, currency, products, sviLinks } from "./data";
 import "../styles.css";
 
@@ -866,11 +866,22 @@ function TextPage({ title, tag, children }) {
   );
 }
 
+function ScrollToTop() {
+  const { pathname, search } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [pathname, search]);
+
+  return null;
+}
+
 function App() {
   const cartApi = useCart();
   const [cartPreviewOpen, setCartPreviewOpen] = useState(false);
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Header cartQuantity={cartApi.quantity} onOpenCart={() => setCartPreviewOpen(true)} />
       <Routes>
         <Route path="/" element={<Home />} />
