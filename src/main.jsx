@@ -669,10 +669,11 @@ function CartCard({ amountToMinimum, cart, needsMinimumForDelivery, subtotal, sh
         <strong>{needsMinimumForDelivery ? "Disponível a partir de R$ 150,00" : "Frete grátis"}</strong>
       </div>
       <div className="summary-total"><span>Total</span><strong>{currency.format(subtotal + shipping)}</strong></div>
-      <p className={`minimum-order-note ${needsMinimumForDelivery ? "warning" : ""}`}>
-        Pedido mínimo para entrega: {currency.format(minimumDeliveryOrder)}.
-        {needsMinimumForDelivery ? ` Faltam ${currency.format(amountToMinimum)} para entrega em Manaus.` : " Retirada na loja disponível para pedidos abaixo desse valor."}
-      </p>
+      {needsMinimumForDelivery && (
+        <p className="minimum-order-note warning">
+          Pedido mínimo para entrega: {currency.format(minimumDeliveryOrder)}. Faltam {currency.format(amountToMinimum)} para entrega em Manaus.
+        </p>
+      )}
       <div className="cart-action-stack">
         <button className="clear-cart-button" type="button" onClick={clearCart} disabled={!cart.length}>Limpar carrinho</button>
         <button className="primary-action full" type="button" onClick={openCheckout}>Finalizar pedido</button>
