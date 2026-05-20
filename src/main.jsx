@@ -211,6 +211,7 @@ function Home() {
       title: "Hidráulicos com compra direta no site",
       text: "Tubos, conexões, registros e acessórios para obra, manutenção e reposição.",
       image: "https://dcdn-us.mitiendanube.com/stores/002/472/736/themes/amazonas/2-slide-1717706013453-2303463716-31070fb5da39fba5945f39084a0fad4f1717706014-1024-1024.webp?9071093781910199982",
+      mobileImage: "https://dcdn-us.mitiendanube.com/stores/002/472/736/themes/amazonas/2-slide-1717706013456-108773263-aac4553ed3257a2f0b96acd0c12cb0901717706016-1024-1024.webp?9071093781910199982",
       cta: "Comprar hidráulicos",
       href: "/produtos?categoria=hidraulicos",
     },

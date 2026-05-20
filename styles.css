@@ -204,8 +204,10 @@ img {
 
 .slideshow {
   position: relative;
-  min-height: 560px;
-  height: min(680px, calc(100vh - 112px));
+  min-height: 0;
+  height: auto;
+  aspect-ratio: 1024 / 360;
+  max-height: 520px;
   overflow: hidden;
   background: var(--ink);
   cursor: grab;
@@ -1427,7 +1429,9 @@ label {
 
   .slideshow {
     min-height: auto;
-    height: min(500px, calc(100svh - 156px));
+    height: auto;
+    aspect-ratio: 1024 / 520;
+    max-height: 430px;
   }
 
   .slide picture,
