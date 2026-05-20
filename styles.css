@@ -1173,6 +1173,8 @@ label {
 }
 
 .brand-grid a {
+  position: relative;
+  overflow: hidden;
   display: grid;
   min-height: 84px;
   place-items: center;
@@ -1181,6 +1183,37 @@ label {
   background: var(--soft);
   color: var(--green-dark);
   font-weight: 800;
+}
+
+.brand-service-card {
+  min-height: 132px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(227, 245, 233, 0.92)),
+    var(--brand-bg) center/70% auto no-repeat !important;
+  font-size: 1.1rem;
+}
+
+.brand-service-card::before {
+  position: absolute;
+  inset: 0;
+  background: var(--brand-bg) center/72% auto no-repeat;
+  content: "";
+  opacity: 0.2;
+  filter: saturate(0.85);
+}
+
+.brand-service-card::after {
+  position: absolute;
+  inset: auto 16px 16px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--green);
+  content: "";
+}
+
+.brand-service-card {
+  color: var(--green-dark);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.88);
 }
 
 .history-page {
