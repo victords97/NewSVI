@@ -226,7 +226,7 @@ function Home() {
       brand: "Jotun",
       title: "Acabamento técnico e industrial",
       text: "Produtos para manutenção, proteção e acabamento com apoio do time consultivo.",
-      image: "/assets/jotun.png",
+      image: "https://dcdn-us.mitiendanube.com/stores/002/472/736/themes/amazonas/2-slide-1735228953936-5278343610-3adc3bf592d613f932834f8d5b6be5ab1735228957-1024-1024.webp?9071093781910199982",
       cta: "Ver produtos",
       href: "/produtos?categoria=pinturas",
     },
