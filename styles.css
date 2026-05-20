@@ -490,7 +490,7 @@ select {
 
 .shop-layout {
   display: grid;
-  grid-template-columns: 250px minmax(0, 1fr) 360px;
+  grid-template-columns: 250px minmax(0, 1fr) 380px;
   gap: 22px;
   align-items: start;
 }
@@ -671,13 +671,19 @@ label {
 }
 
 .clear-cart-button {
-  min-height: 44px;
-  border: 1px solid rgba(168, 61, 52, 0.28);
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid rgba(168, 61, 52, 0.38);
   border-radius: 8px;
-  background: white;
+  background: #fff7f6;
   color: var(--red);
   cursor: pointer;
   font-weight: 800;
+}
+
+.clear-cart-button:hover:not(:disabled) {
+  border-color: var(--red);
+  background: #ffeceb;
 }
 
 .clear-cart-button:disabled {
@@ -689,6 +695,14 @@ label {
   padding: 18px;
   box-shadow: var(--shadow);
   border-top: 4px solid var(--green);
+  max-height: calc(100dvh - 146px);
+  overflow: auto;
+}
+
+.cart-action-stack {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
 }
 
 .checkout-card-head,
@@ -1247,9 +1261,11 @@ label {
   }
 
   .checkout-card {
-    position: relative;
-    top: auto;
+    position: sticky;
+    top: 118px;
     grid-column: 1 / -1;
+    max-height: none;
+    overflow: visible;
   }
 
   .product-grid {

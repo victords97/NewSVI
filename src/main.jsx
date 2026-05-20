@@ -579,8 +579,10 @@ function CartCard({ cart, subtotal, shipping, changeQuantity, clearCart, openChe
       <div className="summary-line"><span>Subtotal</span><strong>{currency.format(subtotal)}</strong></div>
       <div className="summary-line"><span>Entrega</span><strong>{shipping === 0 ? "Grátis" : currency.format(shipping)}</strong></div>
       <div className="summary-total"><span>Total</span><strong>{currency.format(subtotal + shipping)}</strong></div>
-      <button className="clear-cart-button" type="button" onClick={clearCart} disabled={!cart.length}>Limpar carrinho</button>
-      <button className="primary-action full" type="button" onClick={openCheckout}>Finalizar pedido</button>
+      <div className="cart-action-stack">
+        <button className="clear-cart-button" type="button" onClick={clearCart} disabled={!cart.length}>Limpar carrinho</button>
+        <button className="primary-action full" type="button" onClick={openCheckout}>Finalizar pedido</button>
+      </div>
     </aside>
   );
 }
