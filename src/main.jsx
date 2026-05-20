@@ -312,7 +312,7 @@ function Home() {
           <img src={facade} alt="Fachada da loja SVI" />
           <div>
             <span>Autosserviço</span>
-            <h2>Uma infinidade de produtos a sua escolha em modo TAKE AND PAY</h2>
+            <h2>Conheça a loja online SVI e encontre tudo para sua obra em poucos cliques</h2>
           </div>
         </Link>
         <a className="mode-card" href={sviLinks.whatsapp} target="_blank" rel="noreferrer">
