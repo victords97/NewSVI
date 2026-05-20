@@ -133,7 +133,7 @@ function Footer() {
     <footer className="site-footer">
       <div className="footer-brand">
         <strong>SVI</strong>
-        <span>Copyright S V INSTALACOES LTDA - 84089358000122 - 2026. Todos os direitos reservados.</span>
+        <span>Copyright S V INSTALAÇÕES LTDA - 84089358000122 - 2026. Todos os direitos reservados.</span>
       </div>
       <div className="developer-credit">
         <span>Desenvolvido por Victor Pontes Dos Santos</span>
