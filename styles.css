@@ -338,6 +338,21 @@ img {
 .secondary-action {
   border: 1px solid var(--line);
   background: white;
+  color: var(--green-dark);
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.secondary-action:hover {
+  border-color: rgba(0, 139, 67, 0.34);
+  background: var(--green-soft);
+  color: var(--green-dark);
+  transform: translateY(-1px);
+}
+
+.secondary-action:focus-visible {
+  outline: 3px solid rgba(0, 139, 67, 0.24);
+  outline-offset: 2px;
 }
 
 .full {
