@@ -204,7 +204,8 @@ img {
 
 .slideshow {
   position: relative;
-  min-height: calc(100vh - 112px);
+  min-height: 560px;
+  height: min(680px, calc(100vh - 112px));
   overflow: hidden;
   background: var(--ink);
   cursor: grab;
@@ -235,9 +236,9 @@ img {
 }
 
 .slide img {
-  min-height: calc(100vh - 112px);
-  object-fit: contain;
-  padding: clamp(60px, 8vw, 120px) clamp(24px, 8vw, 120px);
+  min-height: 0;
+  object-fit: cover;
+  padding: 0;
   background: radial-gradient(circle at 72% 42%, #ffffff 0, #e8f8ed 42%, #b9dfc7 100%);
   filter: saturate(1.04);
 }
@@ -1424,7 +1425,7 @@ label {
 
   .slideshow {
     min-height: auto;
-    height: min(560px, calc(100svh - 156px));
+    height: min(500px, calc(100svh - 156px));
   }
 
   .slide picture,
@@ -1434,7 +1435,7 @@ label {
   }
 
   .slide img {
-    padding: 160px 24px 92px;
+    padding: 0;
     object-position: center center;
   }
 
