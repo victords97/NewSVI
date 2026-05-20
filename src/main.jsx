@@ -505,6 +505,7 @@ function Shop({ cart, subtotal, addToCart, changeQuantity, clearCart }) {
                     <span>{product.brand}</span>
                     <span>{product.stock > 0 ? `${product.stock} em estoque` : "Indisponível"}</span>
                   </div>
+                  <span className="product-code">Código: {product.sku}</span>
                   <h3>{product.name}</h3>
                   <span className="price">{currency.format(product.price)}</span>
                   <div className="card-actions">
@@ -564,6 +565,7 @@ function CartCard({ cart, subtotal, shipping, changeQuantity, clearCart, openChe
           <article className="cart-item" key={item.product.id}>
             <div>
               <strong>{item.product.name}</strong>
+              <small>Código: {item.product.sku}</small>
               <small>{currency.format(item.product.price)} cada</small>
             </div>
             <div className="quantity-controls">
@@ -597,6 +599,7 @@ function CartPreviewDialog({ cart, subtotal, onClose, changeQuantity, clearCart 
             <article className="cart-item" key={item.product.id}>
               <div>
                 <strong>{item.product.name}</strong>
+                <small>Código: {item.product.sku}</small>
                 <small>{currency.format(item.product.price)} cada</small>
               </div>
               <div className="quantity-controls">
@@ -663,6 +666,7 @@ function ProductDialog({ product, onClose, addToCart, buyNow }) {
           <div className="dialog-info">
             <span>{getCategoryName(product.category)} | {product.sku}</span>
             <h2>{product.name}</h2>
+            <small className="product-code dialog-code">Código do produto: {product.sku}</small>
             <p>{product.brand} disponível para compra online, retirada ou entrega em Manaus.</p>
             <strong className="price">{currency.format(product.price)}</strong>
             <ul>{product.specs.map((spec) => <li key={spec}>{spec}</li>)}</ul>

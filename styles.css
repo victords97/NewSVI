@@ -616,6 +616,21 @@ label {
   margin: 0;
 }
 
+.product-code {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 999px;
+  background: var(--green-soft);
+  color: var(--green-dark);
+  padding: 5px 9px;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.dialog-code {
+  margin-bottom: 12px;
+}
+
 .price {
   color: var(--green-dark);
   font-size: 1.28rem;
