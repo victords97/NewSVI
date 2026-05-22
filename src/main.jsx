@@ -125,7 +125,7 @@ function Header({ cartQuantity, onOpenCart }) {
         </a>
         <span className="phone">Atendimento: 92 2123-4411</span>
         <a className="account-link" href={sviLinks.jobs} target="_blank" rel="noreferrer">Trabalhe Conosco</a>
-        <a className="account-link" href={sviLinks.collaborator} target="_blank" rel="noreferrer">Sou Colaborador</a>
+        <Link className="account-link" to="/portal-colaborador">Sou Colaborador</Link>
         <button className="cart-link" type="button" onClick={onOpenCart} aria-label={`Meu carrinho com ${cartQuantity} itens`}>
           <svg aria-hidden="true" viewBox="0 0 24 24">
             <path d="M6 6h15l-1.5 8.5H8L6 3H3" />
@@ -682,7 +682,7 @@ function CartCard({ amountToMinimum, cart, needsMinimumForDelivery, subtotal, sh
   );
 }
 
-function CartPreviewDialog({ cart, subtotal, onClose, changeQuantity, clearCart }) {
+function CartPreviewDialog({ cart, subtotal, onClose, onCheckout, changeQuantity, clearCart }) {
   return (
     <div className="modal-layer" role="presentation" onMouseDown={onClose}>
       <section className="cart-preview-dialog react-dialog" role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()}>
@@ -710,6 +710,7 @@ function CartPreviewDialog({ cart, subtotal, onClose, changeQuantity, clearCart 
         <div className="summary-total"><span>Subtotal</span><strong>{currency.format(subtotal)}</strong></div>
         <div className="cart-preview-actions">
           <button className="clear-cart-button" type="button" onClick={clearCart} disabled={!cart.length}>Limpar carrinho</button>
+          <button className="primary-action full" type="button" onClick={onCheckout} disabled={!cart.length}>Finalizar pedido</button>
           <Link className="secondary-action full" to="/produtos" onClick={onClose}>Continuar comprando</Link>
         </div>
       </section>
@@ -953,6 +954,29 @@ function StoresPage() {
   );
 }
 
+function CollaboratorLoginPage() {
+  return (
+    <main className="collaborator-page">
+      <section className="collaborator-login-card" aria-label="Portal do colaborador">
+        <Link className="login-logo" to="/" aria-label="Voltar para início">
+          <img src={logo} alt="SVI" />
+        </Link>
+        <div className="login-copy">
+          <span>Portal do colaborador</span>
+          <h1>Acesso interno SVI</h1>
+          <p>Entre com suas credenciais corporativas para consultar informações internas.</p>
+        </div>
+        <form className="login-form">
+          <label>Usuário<input type="text" name="user" placeholder="Digite seu usuário" autoComplete="username" /></label>
+          <label>Senha<input type="password" name="password" placeholder="Digite sua senha" autoComplete="current-password" /></label>
+          <button className="primary-action full" type="button">Entrar</button>
+          <button className="forgot-password" type="button">Esqueci minha senha</button>
+        </form>
+      </section>
+    </main>
+  );
+}
+
 function TextPage({ title, tag, children }) {
   return (
     <main className="content-page">
@@ -979,7 +1003,54 @@ function ScrollToTop() {
 function App() {
   const cartApi = useCart();
   const [cartPreviewOpen, setCartPreviewOpen] = useState(false);
-  useBodyScrollLock(cartPreviewOpen);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [deliveryMode, setDeliveryMode] = useState("delivery");
+  const [confirmation, setConfirmation] = useState("");
+  const shipping = 0;
+  const needsMinimumForDelivery = deliveryMode === "delivery" && cartApi.subtotal > 0 && cartApi.subtotal < minimumDeliveryOrder;
+  const amountToMinimum = Math.max(minimumDeliveryOrder - cartApi.subtotal, 0);
+  useBodyScrollLock(cartPreviewOpen || checkoutOpen);
+
+  const finishHeaderOrder = (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    if (!cartApi.cart.length) {
+      setConfirmation("Adicione pelo menos um produto para finalizar o pedido.");
+      return;
+    }
+    if (!form.get("name") || !form.get("phone") || !form.get("address")) {
+      setConfirmation("Preencha nome, celular e endereço ou loja de retirada.");
+      return;
+    }
+    if (deliveryMode === "delivery" && cartApi.subtotal < minimumDeliveryOrder) {
+      setConfirmation(`Para entrega em Manaus, o pedido mínimo é de ${currency.format(minimumDeliveryOrder)}. Adicione mais ${currency.format(amountToMinimum)} ou selecione retirada na loja.`);
+      return;
+    }
+    const orderId = `SVI-${Math.floor(100000 + Math.random() * 900000)}`;
+    const orderItems = cartApi.cart
+      .map((item) => `- ${item.quantity}x ${item.product.name} (${item.product.sku}) - ${currency.format(item.product.price * item.quantity)}`)
+      .join("\n");
+    const message = [
+      `Olá, SVI! Quero finalizar o pedido ${orderId}.`,
+      "",
+      `Nome: ${form.get("name")}`,
+      `Celular: ${form.get("phone")}`,
+      `Entrega/retirada: ${deliveryMode === "delivery" ? "Entrega em Manaus" : "Retirada na loja"}`,
+      `Endereço/loja: ${form.get("address")}`,
+      `Pagamento: ${form.get("payment")}`,
+      "",
+      "Itens:",
+      orderItems,
+      "",
+      `Subtotal: ${currency.format(cartApi.subtotal)}`,
+      "Entrega: Frete grátis",
+      `Total: ${currency.format(cartApi.subtotal + shipping)}`,
+    ].join("\n");
+
+    setConfirmation(`Pedido ${orderId} criado. Abrindo WhatsApp para envio da lista de compras.`);
+    window.open(`https://wa.me/5592981364269?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <BrowserRouter>
       <ScrollToTop />
@@ -991,6 +1062,7 @@ function App() {
         <Route path="/nossa-trajetoria" element={<HistoryPage />} />
         <Route path="/politica-privacidade" element={<ContentPage type="politica-privacidade" />} />
         <Route path="/nossas-lojas" element={<StoresPage />} />
+        <Route path="/portal-colaborador" element={<CollaboratorLoginPage />} />
         <Route path="/coleta-seletiva" element={<TextPage tag="Coleta Seletiva" title="Separe, recicle e modifique"><p>Destinar resíduos da maneira correta ainda é um desafio para a maioria das cidades. Incluir a coleta seletiva nos planos de gestão tornou-se uma obrigação para os órgãos públicos, porém todos somos responsáveis pelo lixo que geramos.</p><h2>O que é coleta seletiva?</h2><p>É a coleta e recolhimento de resíduos previamente separados de acordo com o tipo de material. Assim, é possível separar resíduos recicláveis dos não recicláveis para uma destinação ambientalmente adequada.</p><h2>Iniciativa da SVI</h2><p>A SVI, por meio de seu setor de SGI, desenvolve coleta seletiva em suas instalações.</p></TextPage>} />
         <Route path="/troca-devolucao" element={<TextPage tag="Troca e Devolução" title="Regras para compras e pedidos"><p><strong>Não fazemos troca entre lojas:</strong> a troca ocorre somente na loja onde foi emitida a venda.</p><p>Para qualquer troca de produtos é necessário apresentar nota ou cupom fiscal.</p><p>Compras feitas por telefone ou internet podem acionar troca e devolução em até 7 dias a partir da entrega.</p></TextPage>} />
         <Route path="/assistencia-tecnica" element={<TextPage tag="Assistência Técnica" title="Fabricantes atendidos"><p>A SVI direciona o cliente para os canais oficiais de assistência de marcas como Makita, Lorenzetti, Fame, Intelbras, Tramontina, Tigre, Starrett, Bosch e Legrand.</p><div className="brand-grid"><a className="brand-service-card" style={{ "--brand-bg": "url('/assets/fornecedores/fornecedor-1.webp')" }} href="https://www.boschacessorios.com.br" target="_blank" rel="noreferrer" aria-label="Bosch"></a><a className="brand-service-card" style={{ "--brand-bg": "url('/assets/fornecedores/fornecedor-4.webp')" }} href="https://www.tigre.com.br" target="_blank" rel="noreferrer" aria-label="Tigre"></a><a className="brand-service-card" style={{ "--brand-bg": "url('/assets/fornecedores/fornecedor-9.webp')" }} href="https://www.lorenzetti.com.br" target="_blank" rel="noreferrer" aria-label="Lorenzetti"></a><a className="brand-service-card" style={{ "--brand-bg": "url('/assets/fornecedores/fornecedor-2.webp')" }} href="https://www.starrett.com.br" target="_blank" rel="noreferrer" aria-label="Starrett"></a></div></TextPage>} />
@@ -1001,7 +1073,22 @@ function App() {
           subtotal={cartApi.subtotal}
           changeQuantity={cartApi.changeQuantity}
           clearCart={cartApi.clearCart}
+          onCheckout={() => {
+            setCartPreviewOpen(false);
+            setCheckoutOpen(true);
+          }}
           onClose={() => setCartPreviewOpen(false)}
+        />
+      )}
+      {checkoutOpen && (
+        <CheckoutDialog
+          amountToMinimum={amountToMinimum}
+          confirmation={confirmation}
+          deliveryMode={deliveryMode}
+          finishOrder={finishHeaderOrder}
+          needsMinimumForDelivery={needsMinimumForDelivery}
+          onClose={() => setCheckoutOpen(false)}
+          setDeliveryMode={setDeliveryMode}
         />
       )}
       <SupplierCarousel />
